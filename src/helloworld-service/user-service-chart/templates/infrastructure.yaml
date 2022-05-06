@@ -1,0 +1,122 @@
+# # Namespace
+# apiVersion: v1
+# kind: Namespace
+# metadata:
+#   name: {{ .Values.Namespace }}
+#   labels:
+#     env: {{ .Values.Env }}
+#     ver: {{ .Chart.AppVersion }}
+#     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+# ---
+# Application Gateway Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: user-ingress
+  namespace: {{ .Values.Namespace }}
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: user-svc
+            port:
+              number: 80
+---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: hello-world-ingress-secondary
+#   namespace: {{ .Values.Namespace }}
+#   annotations:
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+#     nginx.ingress.kubernetes.io/rewrite-target: /$2
+# spec:
+#   ingressClassName: nginx
+#   rules:
+#   - http:
+#       paths:
+#       - path: /hello-world-one(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: user-svc
+#             port:
+#               number: 80
+#       - path: /hello-world-two(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: user-svc
+#             port:
+#               number: 80
+#       - path: /myapp(/|$)(.*)
+#         pathType: Prefix
+#         backend:
+#           service:
+#             name: user-svc
+#             port:
+#               number: 80
+---
+# Servizio
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-svc
+  namespace: {{ .Values.Namespace }}
+  labels:
+    env: {{ .Values.Env }}
+    ver: {{ .Chart.AppVersion }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  ports:
+    - port: 80
+  selector:
+    app: user-app
+---
+# Applicatzione da testare
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app-deploy
+  namespace: {{ .Values.Namespace }}
+  labels:
+    env: {{ .Values.Env }}
+    ver: {{ .Chart.AppVersion }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.image.replicas }}
+  selector:
+    matchLabels:
+      app: user-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: user-app
+        env: {{ .Values.Env }}
+        ver: {{ .Chart.AppVersion }}
+        chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: user-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+            memory: 128M
+          limits:
+            cpu: 500m
+            memory: 512M
