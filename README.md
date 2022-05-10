@@ -143,7 +143,8 @@ If you have followed all the previous steps you can now start the pipeline, whic
   - Choice Agent Virtual Machine Size = Size of the virtual machine that kubernetes will create.
  
 - When you have entered all the inputs, click the green button "Run workflow"
-For more information on where to find the values click here
+
+<br/> For more information on where to find the values click here
 [link](README-retrieveRegistryInfo.MD)
 
 ## 11. Retrieve IP for testing
