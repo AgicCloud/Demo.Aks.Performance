@@ -218,7 +218,7 @@ Copy the Name of a vm size with no restrictions
 ```console
 az vm list-skus --location <replace with location> -r virtualMachines --output table
 ```
-replace with screenshoot
+![vmsize family](https://user-images.githubusercontent.com/33416347/167675602-285e3440-c96b-480f-83f0-ab036124273e.PNG)
 
 ### Edit the github workflow
 
