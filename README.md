@@ -132,7 +132,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 - Click on "Run Workflow".
 
-![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
+![Cattura](https://user-images.githubusercontent.com/33416347/167612354-072c4295-529d-4cfe-bf04-5bf6e2ef6ca6.PNG)
 
 - Enter the required inputs:
   - Set the name of the container registry resourse group = Set the name of the resource group where the container registry is deployed
