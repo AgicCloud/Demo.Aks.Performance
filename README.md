@@ -142,10 +142,12 @@ If you have followed all the previous steps you can now start the pipeline, whic
   - Set App Replicas = Number of instances the app creates.
   - Choice Agent Virtual Machine Size = Size of the virtual machine that kubernetes will create.
  
-- When you have entered all the inputs, click the green button "Run workflow"
+ 1. Container registry name
+ 2. Image name
+ 3. Image tag
+![info](https://user-images.githubusercontent.com/33416347/167634453-c8a5740d-a57b-4701-b5e6-0e240d56f44a.png)
 
-For more information on where to find the values click here
-[link](README-retrieveRegistryInfo.MD)
+- When you have entered all the inputs, click the green button "Run workflow"
 
 ## 11. Retrieve IP for testing
 
