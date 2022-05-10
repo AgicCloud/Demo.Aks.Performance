@@ -42,7 +42,7 @@ on:
         description: 'Set app replicas'
         required: true
       NODEPOOLS:
-        description: 'Set number of node pools'
+        description: 'Set number of nodes'
         required: true
       AGENTVMSIZE:
         description: 'Choice agent virtual machine size'
