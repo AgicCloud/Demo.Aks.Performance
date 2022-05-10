@@ -134,7 +134,8 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 ![image](https://user-images.githubusercontent.com/60384226/166693288-148a86e8-8d4c-4809-b5c0-4ca8385a5699.png)
 
-- Enter the required inputs: 
+- Enter the required inputs:
+  - Set the name of the container registry resourse group = Set the name of the resource group where the container registry is deployed
   - Set Container Registry Name = Only the name of container registry ( ex. acr-...).
   - Set Image Name = Only the name of a Image push in container registry, without version.
   - Set Image Tag = The version of Image ( ex. v1, Latest, ...)

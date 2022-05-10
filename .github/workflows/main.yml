@@ -5,6 +5,7 @@ name: CI
 
 env:
   AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
+  CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME:          ""
   REPOSITORYNAME:                 ""
   IMAGETAG:                       ""
@@ -24,20 +25,23 @@ on:
 
   workflow_dispatch:
     inputs:
+      CONTAINERREGISTRYRESOURCEGROUP:
+        description: "Set the name of the container registry resourse group"
+        required: true
       CONTAINERREGISTRYNAME:
-        description: 'Set Container Registry Name'
+        description: 'Set container registry name'
         required: true
       REPOSITORYNAME:
-        description: 'Set Image Name'
+        description: 'Set image name'
         required: true
       IMAGETAG:
-        description: 'Set Image Tag'
+        description: 'Set image tag'
         required: true
       IMAGEREPLICAS:
-        description: 'Set App Replicas'
+        description: 'Set app replicas'
         required: true
       AGENTVMSIZE:
-        description: 'Choice Agent Virtual Machine Size'
+        description: 'Choice agent virtual machine size'
         type: choice
         required: true
         options:
@@ -77,6 +81,7 @@ jobs:
         run: |
           echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
           echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
+          echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
           echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
@@ -108,7 +113,7 @@ jobs:
       - name: Assign role to Kubernetes service user to access Container Registry image 
         run: |
           sleep 15
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
       
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
