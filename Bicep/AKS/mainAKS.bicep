@@ -19,7 +19,7 @@ param osDiskSizeGB int = 0
 
 @minValue(1)
 @maxValue(50)
-param agentCount int = 3
+param agentCount int // = 3
 
 param agentVMSize string //= 'Standard_DS2_v2'
 // osType was a defaultValue with only one allowedValue, which seems strange?, could be a good TTK test

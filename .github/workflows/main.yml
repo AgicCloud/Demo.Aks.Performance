@@ -15,7 +15,8 @@ env:
   KUBERNETESSERVICENAME:          "demo-performance-aks"
   AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
   AZURELOADTESTINGNAME:           "demo-performance-alt"
-  CLUSTERIP:                      "" 
+  CLUSTERIP:                      ""
+  NODEPOOLS:                      ""
 
 # # Controls when the workflow will run
 on:
@@ -40,6 +41,9 @@ on:
       IMAGEREPLICAS:
         description: 'Set app replicas'
         required: true
+      NODEPOOLS:
+        description: 'Set number of node pools'
+        required: true
       AGENTVMSIZE:
         description: 'Choice agent virtual machine size'
         type: choice
@@ -48,6 +52,9 @@ on:
         - standard_d2s_v5
         - standard_d4s_v5
         - standard_d8s_v5
+        - standard_f2s_v2
+        - standard_f4s_v2
+        - standard_f8s_v2
 
   # Allows you to run this workflow manually from the Actions tab
 #  workflow_dispatch:
@@ -85,6 +92,7 @@ jobs:
           echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
+          echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
@@ -94,7 +102,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}"
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
           failOnStdErr: false
 
       # Kubectl tool installer

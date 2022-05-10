@@ -164,6 +164,67 @@ To access the service grafana the credentials will be:
  - username = admin 
  - password = the one you entered in the secrets in step number 4.
 
+## 13. Git commands
+
+### Step 1
+
+1. Open the terminal
+2. Change the current working directory to your local repository
+3. Stage the file for commit to your local repository by the following command
+Sample: 
+```console
+git add .
+```
+
+### Step 2
+
+Commit the file that you’ve staged in your local repository
+
+Sample: 
+```console
+git commit -m "Add existing file"
+```
+
+### Step 3
+
+Push the changes in your local repository to GitHub
+
+Sample: 
+```console
+git push origin main
+```
+
+# Customizations
+
+## Add more vm families
+
+### Login to Azure
+
+```console
+az login
+```
+
+```console
+az account list -o table
+```
+
+```console
+az account set -s <SubscriptionId>
+```
+
+### Get all available size for specified location
+
+Copy the Name of a vm size with no restrictions
+```console
+az vm list-skus --location <replace with location> -r virtualMachines --output table
+```
+replace with screenshoot
+
+### Edit the github workflow
+
+Modify the .github/workflows/main.yaml file by adding the new vm after line 57.
+Write the name in lower case.
+
 # Other references
 
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal#set-up-chaos-mesh-on-your-aks-cluster
