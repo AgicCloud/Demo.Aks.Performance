@@ -144,7 +144,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
  
 - When you have entered all the inputs, click the green button "Run workflow"
 
-<br/> For more information on where to find the values click here
+For more information on where to find the values click here
 [link](README-retrieveRegistryInfo.MD)
 
 ## 11. Retrieve IP for testing
