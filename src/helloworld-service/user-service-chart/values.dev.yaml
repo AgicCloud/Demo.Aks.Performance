@@ -1,0 +1,7 @@
+Env: "Development"
+
+Namespace: "demo-performance"
+
+App:
+  ImageName: "msftdemoperformanceacr.azurecr.io/dotnet/samples/aspnetapp:latest"
+  Replicas: 3

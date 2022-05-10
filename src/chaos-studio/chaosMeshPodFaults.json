@@ -1,0 +1,44 @@
+{
+  "location": "westeurope",
+  "identity": {
+    "type": "SystemAssigned"
+  },
+  "properties": {
+    "steps": [
+      {
+        "name": "AKS pod kill",
+        "branches": [
+          {
+            "name": "AKS pod kill",
+            "actions": [
+              {
+                "type": "continuous",
+                "selectorId": "Selector1",
+                "duration": "PT10M",
+                "parameters": [
+                  {
+                    "key": "jsonSpec",
+                    "value": "{\"action\":\"pod-failure\",\"mode\":\"all\",\"duration\":\"600s\",\"selector\":{\"namespaces\":[\"default\"]}}"
+                  }
+                ],
+                "name": "urn:csci:microsoft:azureKubernetesServiceChaosMesh:podChaos/2.1"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "selectors": [
+      {
+        "id": "Selector1",
+        "type": "List",
+        "targets": [
+          {
+            "type": "ChaosTarget",
+            "id": "/subscriptions/6a37c895-4239-4b1e-bc34-a48c4994cc8a/rg-poc-demo-performance/providers/Microsoft.ContainerService/managedClusters/demo-performance-aks/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh"
+          }
+        ]
+      }
+    ]
+  }
+}
