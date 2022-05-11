@@ -4,17 +4,17 @@ name: CI
 # Global Variables
 
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
+  AZUREAPPLICATIONINSIGHTSNAME:   "amastri-demo-performance-ai"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME:          ""
   REPOSITORYNAME:                 ""
   IMAGETAG:                       ""
   IMAGEREPLICAS:                  ""
   AGENTVMSIZE:                    ""
-  APPNAME:                        "finaltestdemo"
-  KUBERNETESSERVICENAME:          "demo-performance-aks"
-  AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
-  AZURELOADTESTINGNAME:           "demo-performance-alt"
+  APPNAME:                        "amastri-demo-performance-app"
+  KUBERNETESSERVICENAME:          "amastri-demo-performance-aks"
+  AZURELOGANALYTICSWORKSPACENAME: "amastri-demo-performance-la-ws"
+  AZURELOADTESTINGNAME:           "amastri-demo-performance-alt"
   CLUSTERIP:                      ""
   NODEPOOLS:                      ""
 
