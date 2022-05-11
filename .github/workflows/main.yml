@@ -106,13 +106,7 @@ jobs:
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
           failOnStdErr: false
 
-      # Assign role to Kubernetes service user to access Container Registry image
-      - name: Assign role to Kubernetes service user to access Container Registry image
-        shell: pwsh
-        run: |
-          sleep 15         
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
-
+      
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
@@ -138,6 +132,13 @@ jobs:
       #     $EXPERIMENT_PRINCIPAL_ID = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.servicePrincipalId }}"
       #     az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME"     
       
+      # Assign role to Kubernetes service user to access Container Registry image
+      - name: Assign role to Kubernetes service user to access Container Registry image
+        shell: pwsh
+        run: |
+          sleep 15         
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
         run: |
