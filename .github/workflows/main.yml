@@ -118,7 +118,8 @@ jobs:
           helm upgrade nginx ingress-nginx/ingress-nginx --install
 
       # Assign role to Kubernetes service user to access Container Registry image
-      - name: Assign role to Kubernetes service user to access Container Registry image 
+      - name: Assign role to Kubernetes service user to access Container Registry image
+        shell: pwsh
         run: |
           sleep 15
           
