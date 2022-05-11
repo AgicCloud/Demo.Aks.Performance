@@ -121,6 +121,11 @@ jobs:
       - name: Assign role to Kubernetes service user to access Container Registry image 
         run: |
           sleep 15
+          
+          $CLIENT_ID = az aks show --resource-group ${{ secrets.AZURE_RG }} --name ${{ env.KUBERNETESSERVICENAME }} --query "identity.principalId" --output tsv
+          $ACR_ID = az acr show --name ${{ env.CONTAINERREGISTRYNAME }} --resource-group ${{ env.CONTAINERREGISTRYRESOURCEGROUP }} --query "id" --output tsv
+          az role assignment create --assignee $CLIENT_ID --role acrpull --scope $ACR_ID
+          
           az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
       
       # Deploy Container registry image to Kubernetes service 
