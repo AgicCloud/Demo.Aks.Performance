@@ -27,25 +27,25 @@ on:
   workflow_dispatch:
     inputs:
       CONTAINERREGISTRYRESOURCEGROUP:
-        description: "Set the name of the container registry resourse group"
+        description: 'Set the name of the container registry resource group'
         required: true
       CONTAINERREGISTRYNAME:
-        description: 'Set container registry name'
+        description: 'Set the container registry name'
         required: true
       REPOSITORYNAME:
-        description: 'Set image name'
+        description: 'Set the image name'
         required: true
       IMAGETAG:
-        description: 'Set image tag'
+        description: 'Set the image tag'
         required: true
       IMAGEREPLICAS:
-        description: 'Set app replicas'
+        description: 'Set the number of app replicas'
         required: true
       NODEPOOLS:
-        description: 'Set number of nodes'
+        description: 'Set the number of nodes'
         required: true
       AGENTVMSIZE:
-        description: 'Choice agent virtual machine size'
+        description: 'Choose the kubernetes node VM size'
         type: choice
         required: true
         options:

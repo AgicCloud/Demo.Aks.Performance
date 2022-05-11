@@ -38,6 +38,22 @@ az group create -l "switzerlandnorth" -n "DEMO"
 ```
 In the sample there's the creation of a resource group named *DEMO* in the region *switzerlandnorth*
 
+The command output is a JSON response like this one
+```json
+{
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxxxxxxxxxxxxxxxxx",
+  "location": "xxxxxxxxxxxx",
+  "managedBy": null,
+  "name": "xxxxxxxxxxxxxxxxxxxxxxx",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
+The ID value should be used in the next phase
+
 Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
 
 ## 2. Service Principal creation
@@ -45,9 +61,9 @@ Create a service principal identity, and assign the owner role to the group crea
 
 **Save the statement output in Notepad for use in the next step.**
 
-Sample (change the resource group name and subscription ID in the *scopes* parameter)
+Sample (use the previuos ID value in the *scopes* parameter)
 ```console
-az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e/resourceGroups/DEMO --sdk-auth
+az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxxxxxxxxxxxxxxxxx
 ```
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
