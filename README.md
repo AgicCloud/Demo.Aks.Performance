@@ -24,7 +24,7 @@ The first thing to do before installation is to fork your repository.
 ![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
 
 ## Prerequisites
-- Access your azure subscription with "administrative credentials".
+- The Azure AD user to be used in this project must be a subscription owner.
 - A Container Registry with an image. If you don't have a container registry with an image check the file **README-createImageForTest.md** (in the repository).
 
 # Installation
@@ -47,7 +47,7 @@ Create a service principal identity, and assign the owner role to the group crea
 
 Sample (change the resource group name and subscription ID in the *scopes* parameter)
 ```console
-az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e/resourceGroups/DEMO --sdk-auth
+az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e --sdk-auth
 ```
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
