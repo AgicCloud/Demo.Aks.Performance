@@ -38,6 +38,22 @@ az group create -l "switzerlandnorth" -n "DEMO"
 ```
 In the sample there's the creation of a resource group named *DEMO* in the region *switzerlandnorth*
 
+The command output is a JSON response like this one
+```json
+{
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxxxxxxxxxxxxxxxxx",
+  "location": "xxxxxxxxxxxx",
+  "managedBy": null,
+  "name": "xxxxxxxxxxxxxxxxxxxxxxx",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
+The ID value should be used in the next phase
+
 Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
 
 ## 2. Service Principal creation
