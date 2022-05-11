@@ -105,13 +105,13 @@ jobs:
           template: ./Bicep/AKS/mainAKS.bicep
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
           failOnStdErr: false
-          
+
       # Assign role to Kubernetes service user to access Container Registry image
       - name: Assign role to Kubernetes service user to access Container Registry image
         shell: pwsh
         run: |
           sleep 15         
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
 
       # Kubectl tool installer
       - name: Kubectl tool installer
