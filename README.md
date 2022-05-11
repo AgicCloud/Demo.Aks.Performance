@@ -63,7 +63,7 @@ Create a service principal identity, and assign the owner role to the group crea
 
 Sample (change subscription ID in the *scopes* parameter)
 ```console
-az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e --sdk-auth
+az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-XXXX-XXXX-XXXX-ecec2fb8c22e --sdk-auth
 ```
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
