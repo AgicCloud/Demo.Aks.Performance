@@ -4,7 +4,6 @@ name: CI
 # Global Variables
 
 env:
-  AZUREAPPLICATIONINSIGHTSNAME:   "demo-performance-ai"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME:          ""
   REPOSITORYNAME:                 ""
@@ -13,17 +12,12 @@ env:
   AGENTVMSIZE:                    ""
   APPNAME:                        "finaltestdemo"
   KUBERNETESSERVICENAME:          "demo-performance-aks"
-  AZURELOGANALYTICSWORKSPACENAME: "demo-performance-la-ws"
   AZURELOADTESTINGNAME:           "demo-performance-alt"
   CLUSTERIP:                      ""
   NODEPOOLS:                      ""
 
-# # Controls when the workflow will run
+# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
-  # push:
-  #   branches: [ Prod ]
-
   workflow_dispatch:
     inputs:
       CONTAINERREGISTRYRESOURCEGROUP:
@@ -55,9 +49,6 @@ on:
         - standard_f2s_v2
         - standard_f4s_v2
         - standard_f8s_v2
-
-  # Allows you to run this workflow manually from the Actions tab
-#  workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -93,7 +84,8 @@ jobs:
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
-
+          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
+      
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
         id: Kubernetes
@@ -104,7 +96,7 @@ jobs:
           template: ./Bicep/AKS/mainAKS.bicep
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
           failOnStdErr: false
-
+   
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
@@ -115,14 +107,15 @@ jobs:
           az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
-          helm upgrade nginx ingress-nginx/ingress-nginx --install
-
-      # Assign role to Kubernetes service user to access Container Registry image
-      - name: Assign role to Kubernetes service user to access Container Registry image 
-        run: |
-          sleep 15
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          helm upgrade nginx ingress-nginx/ingress-nginx --install  
       
+      # Assign role to Kubernetes service user to access Container Registry image
+      - name: Assign role to Kubernetes service user to access Container Registry image
+        shell: pwsh
+        run: |
+          sleep 15         
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+
       # Deploy Container registry image to Kubernetes service 
       - name: Deploy Container registry image to Kubernetes service
         run: |
