@@ -93,7 +93,7 @@ jobs:
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
-          echo ${{ secrets.AZURE_CREDENTIALS.clientId }}
+          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
       
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
