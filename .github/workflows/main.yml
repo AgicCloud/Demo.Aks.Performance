@@ -180,8 +180,8 @@ jobs:
           parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="ChaosMeshPodFaultsExperiment"
           failOnStdErr: false
 
-      # Give experiment permission to your AKS cluster
-      - name: Give experiment permission to your AKS cluster
+      # Assign experiment permission to your AKS cluster
+      - name: Assign experiment permission to your AKS cluster
         shell: pwsh
         run: |
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
@@ -189,7 +189,10 @@ jobs:
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
 
           $EXPERIMENT_PRINCIPAL_ID = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.servicePrincipalId }}"
-          az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME"
+          [array] $getAssignmentResult = az role assignment list --assignee $EXPERIMENT_PRINCIPAL_ID --all
+          if($getAssignmentResult.count -eq 1){
+            az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
+          }
 
       # Run Chaos Experiments
       - name: Run Chaos Experiments
@@ -197,7 +200,7 @@ jobs:
         run: |
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"    
+          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
 
       # https://github.com/Azure/load-testing
