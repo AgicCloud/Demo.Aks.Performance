@@ -43,6 +43,7 @@ on:
         type: choice
         required: true
         options:
+          - standard_d2as_v5
           - standard_d2s_v5
           - standard_d4s_v5
           - standard_d8s_v5
