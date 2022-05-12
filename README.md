@@ -30,21 +30,33 @@ The first thing to do before installation is to fork your repository.
 ## Prerequisites
 
 - The Azure AD user to be used in this project must be a subscription owner.
+    To check if the AAD user is a subscription owner, open the Azure portal, then open the subscription, and check if the user is listed as Owner in the `Access Control (IAM)` blade, as you can see in the following image
+    ![Immagine 2022-05-13 000205](https://user-images.githubusercontent.com/30232175/168175290-1d22e603-3e28-462f-aa05-d4a2d3d9b0a4.png)
 - A Container Registry with an image. If you don't have a container registry with an image check the file [README-createImageForTest.md](README-createImageForTest.md).
 
 # Installation
 
 ## 1. Resource group creation
 
-Create a resource group that will contain all the resources generated
+Create a resource group that will contain all the resources generated.
 
-Sample:
-
+Before creating the resource group, you should decide the target region. To see the list of current available regions, you can execute this command
 ```console
-az group create -l "switzerlandnorth" -n "DEMO"
+az account list-locations -o table
+```
+Choose a region, and use the "Name" value 
+
+To create the resource group, the command is:
+```console
+az group create -l <REGION-NAME> -n <RESOURCE-GROUP-NAME>
 ```
 
-In the sample there's the creation of a resource group named _DEMO_ in the region _switzerlandnorth_
+Substitute `<REGION-NAME>` with the Name value of the chosen region, then choose a unique resource group inside you subscription and use it in place of `<RESOURCE-GROUP-NAME>`
+
+Sample command:
+```console
+az group create -l westeurope -n unique-resource-group-aks-demo
+```
 
 The command output is a JSON response like this one
 
@@ -62,20 +74,35 @@ The command output is a JSON response like this one
 }
 ```
 
-The ID value should be used in the next phase
-
 Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-latest
 
 ## 2. Service Principal creation
 
 Create a service principal identity, and assign the owner role to the group created in the previous step.
 
-**Save the statement output in Notepad for use in the next step.**
+> VERY IMPORTANT: Save the statement output in Notepad for use in the next step. If you forget this output, you won't be able to launch the GitHub Action
 
-Sample (change subscription ID in the _scopes_ parameter)
-
+The command that creates the Service Principal is:
 ```console
-az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-XXXX-XXXX-XXXX-ecec2fb8c22e --sdk-auth
+az ad sp create-for-rbac --name <SERVICE-PRINCIPAL-UNIQUE-NAME> --role owner --scopes <SUBSCRIPTION-ID> --sdk-auth
+```
+
+Choose a Service Principal name that is unique inside you Azure Active Directory, and use it in place of `<SERVICE-PRINCIPAL-UNIQUE-NAME>`. 
+
+To get the `<SUBSCRIPTION-ID>` value, use this command
+```console
+az account show --query id --output tsv
+```
+The ouptut of this command is something like
+```console
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+Copy the output, and use it to substitute the `<ID>` inside the string `/subscription/<ID>`. The result is `/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`, and this is the `<SUBSCRIPTION-ID>` value.
+
+An example of the command that creates the Service Principal is:
+```console
+az ad sp create-for-rbac --name "unique-sp-name-for-aks-demo" --role owner --scopes /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --sdk-auth
 ```
 
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
@@ -114,14 +141,22 @@ After that, you will have the following secrets
 
 ## 5. Customize resources names file
 
-Customize the resources names file `.github\workflows\main.yml`
+Customize the resources names file `.github\workflows\main.yml`.
 
+In your GitHub repo, go to Code, then browse to `.github\workflows\main.yml`
+
+![image](https://user-images.githubusercontent.com/30232175/168174491-fd576870-cd5a-4790-8228-be66da3d6577.png)
+
+To edi the file, click the `Edit this file` icon.
+
+Then Customize ONLY the value of the following keys, using unique names
 ```
 Customize ONLY the value of the following keys:
   APPNAME:                        "demo"
   KUBERNETESSERVICENAME:          "DEMOKubernetesService"
   AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
 ```
+Then commit the changes, using the `Commit Changes` green button, using the ` Commit directly to the main branch` option
 
 ## 6. Subscription resource providers check
 
@@ -184,6 +219,8 @@ You can find those values in the Container Registry --> Repositories page
 - When you have entered all the inputs, click the green button "Run workflow"
 - The workflow creates the Azure resources, then deploys the apps in the AKS cluster.
 
+> **Important**: When you deploy an Azure Kubernetes Service cluster in Azure, a second resource group gets created for the worker nodes. By default, AKS will name the node resource group `MC_resourcegroupname_clustername_location`, as you can see [in the AKS documentation](https://docs.microsoft.com/en-us/azure/aks/cluster-configuration#custom-resource-group-name). This resource group is managed entirely by Kubernetes, and it will be deleted automatically on cluster deletion.
+
 ## 8. Retrieve IP for testing
 
 When the pipeline has completed, you can retrieve the IP address of your web app to test it.
@@ -199,6 +236,20 @@ The credentials to login are:
 
 - **username**: admin
 - **password**: the one you entered as a secret in step number 4.
+
+---
+
+# Troubleshooting
+Here are some issues that can happen during the installation phases
+- **1. Resource group creation** failure. You could be using an existing resource group name. Retry the phase with another name
+- **2. Service Principal creation** failure. 
+    - You could be using an existing name. Retry the phase with another name. 
+    - Your account isn't a subscription owner. Retry this phase using a subscription owner
+- **7. Start the Pipeline** failure.
+    - Check the GitHub secrets created in phase #3 and #4, then repeat phase #7
+    - The names usend in phase #5 aren't unique, or contain forbidden characters. Change them, then repeat phase #7
+    - The Subscription resource providers aren't registered. Check phase #6, then repeat phase #7
+    - The input used in phase #7 aren't valid. Check input validity, then repeat phase #7
 
 ---
 
@@ -279,6 +330,13 @@ Reference:
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-tutorial-aks-portal
 
 https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-fault-library#aks-chaos-mesh-network-faults
+
+---
+
+# Disinstallation
+To remove all the objects created, you must:
+1. Delete the resource group created in step #1. Open the resource groups view in Azure Portal, then select the resource group and delete it with the delete button
+2. Delete the service principal created. Go to Azure Active Directory in Azure Portal, then select `App Registration` blade, and then `Owned Applications` tab. Click `View All the Applications` button, search the Service principal, click on it, then delete it with the `Delete` button
 
 ---
 
