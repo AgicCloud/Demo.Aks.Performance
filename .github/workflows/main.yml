@@ -115,7 +115,8 @@ jobs:
         shell: pwsh
         run: |
           sleep 15         
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          $ACR_ID = $(az acr show --name "${{ env.CONTAINERREGISTRYNAME }}"  --resource-group "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --query "id" --output tsv)
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "$ACR_ID"
 
       # Deploy Container registry image to Kubernetes service
       - name: Deploy Container registry image to Kubernetes service
