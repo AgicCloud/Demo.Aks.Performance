@@ -63,7 +63,7 @@ Create a service principal identity, and assign the owner role to the group crea
 
 Sample (change subscription ID in the *scopes* parameter)
 ```console
-az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-f4a1-4ff3-bc6b-ecec2fb8c22e --sdk-auth
+az ad sp create-for-rbac --name "DEMO" --role owner --scopes /subscriptions/744dd6eb-XXXX-XXXX-XXXX-ecec2fb8c22e --sdk-auth
 ```
 Reference: https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
 
@@ -90,7 +90,7 @@ Sample
 Create the following GitHub secrets 
 - **AZURE_RG** containing the Resource Group Name to be created. This Resource Group will contain all the Azure resources created by this project. To remove all those resources, you can delete this Resource Group
 - **AZURE_SUBSCRIPTION** containing the Azure Subscription ID, where the Resource Group will be created
-- **GRAFANA_ADMIN_PASSWORD** containing the password to access Grafana .
+- **GRAFANA_ADMIN_PASSWORD** containing the password to access Grafana.
 
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
