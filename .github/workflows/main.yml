@@ -1,66 +1,66 @@
-name: CI
+name: Manual-Deploy
 
 # This is a basic workflow to help you get started with Actions
 # Global Variables
 
 env:
   CONTAINERREGISTRYRESOURCEGROUP: ""
-  CONTAINERREGISTRYNAME:          ""
-  REPOSITORYNAME:                 ""
-  IMAGETAG:                       ""
-  IMAGEREPLICAS:                  ""
-  AGENTVMSIZE:                    ""
-  APPNAME:                        "finaltestdemo"
-  KUBERNETESSERVICENAME:          "demo-performance-aks"
-  AZURELOADTESTINGNAME:           "demo-performance-alt"
-  CLUSTERIP:                      ""
-  NODEPOOLS:                      ""
+  CONTAINERREGISTRYNAME: ""
+  REPOSITORYNAME: ""
+  IMAGETAG: ""
+  IMAGEREPLICAS: ""
+  AGENTVMSIZE: ""
+  APPNAME: "finaltestdemo"
+  KUBERNETESSERVICENAME: "demo-performance-aks"
+  AZURELOADTESTINGNAME: "demo-performance-alt"
+  CLUSTERIP: ""
+  NODEPOOLS: ""
 
 # Controls when the workflow will run
 on:
   workflow_dispatch:
     inputs:
       CONTAINERREGISTRYRESOURCEGROUP:
-        description: 'Set the name of the container registry resource group'
+        description: "Set the name of the container registry resource group"
         required: true
       CONTAINERREGISTRYNAME:
-        description: 'Set the container registry name'
+        description: "Set the container registry name"
         required: true
       REPOSITORYNAME:
-        description: 'Set the image name'
+        description: "Set the image name"
         required: true
       IMAGETAG:
-        description: 'Set the image tag'
+        description: "Set the image tag"
         required: true
       IMAGEREPLICAS:
-        description: 'Set the number of app replicas'
+        description: "Set the number of app replicas"
         required: true
       NODEPOOLS:
-        description: 'Set the number of nodes'
+        description: "Set the number of nodes"
         required: true
       AGENTVMSIZE:
-        description: 'Choose the kubernetes node VM size'
+        description: "Choose the kubernetes node VM size"
         type: choice
         required: true
         options:
-        - standard_d2s_v5
-        - standard_d4s_v5
-        - standard_d8s_v5
-        - standard_f2s_v2
-        - standard_f4s_v2
-        - standard_f8s_v2
+          - standard_d2as_v5
+          - standard_d2s_v5
+          - standard_d4s_v5
+          - standard_d8s_v5
+          - standard_f2s_v2
+          - standard_f4s_v2
+          - standard_f8s_v2
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build "
-  build:
+  Deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Runs a single command using the runners shell
-      - name: 'az version'
+      - name: "az version"
         run: az version
 
       # Checkout last version code from Main branch
@@ -73,7 +73,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Set env to Input 
+      # Set env to Input
       - name: Set the value
         id: step_one
         run: |
@@ -85,7 +85,7 @@ jobs:
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
           echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
-      
+
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
         id: Kubernetes
@@ -96,27 +96,28 @@ jobs:
           template: ./Bicep/AKS/mainAKS.bicep
           parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
           failOnStdErr: false
-   
+
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
-      
+
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
         run: |
           az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
-          helm upgrade nginx ingress-nginx/ingress-nginx --install  
-      
+          helm upgrade nginx ingress-nginx/ingress-nginx --install
+
       # Assign role to Kubernetes service user to access Container Registry image
       - name: Assign role to Kubernetes service user to access Container Registry image
         shell: pwsh
         run: |
           sleep 15         
-          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "${{ env.CONTAINERREGISTRYNAME }}"
+          $ACR_ID = $(az acr show --name "${{ env.CONTAINERREGISTRYNAME }}"  --resource-group "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --query "id" --output tsv)
+          az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "$ACR_ID"
 
-      # Deploy Container registry image to Kubernetes service 
+      # Deploy Container registry image to Kubernetes service
       - name: Deploy Container registry image to Kubernetes service
         run: |
           cd src/helloworld-service/user-service-chart
@@ -147,7 +148,7 @@ jobs:
           $TARGET_TYPE = "Microsoft-AzureKubernetesServiceChaosMesh"
 
           az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
-      
+
       # Create The Capabilities On The Target
       - name: Create The Capabilities On The Target
         shell: pwsh
@@ -155,7 +156,7 @@ jobs:
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          
+
           az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh/capabilities/PodChaos-2.1?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
 
       # Deploy Bicep file Azure Load Testing
@@ -179,28 +180,31 @@ jobs:
           parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="ChaosMeshPodFaultsExperiment"
           failOnStdErr: false
 
-      # Give experiment permission to your AKS cluster
-      - name: Give experiment permission to your AKS cluster
+      # Assign experiment permission to your AKS cluster
+      - name: Assign experiment permission to your AKS cluster
         shell: pwsh
         run: |
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          
+
           $EXPERIMENT_PRINCIPAL_ID = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.servicePrincipalId }}"
-          az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME"
-      
+          [array] $getAssignmentResult = az role assignment list --assignee $EXPERIMENT_PRINCIPAL_ID --all
+          if($getAssignmentResult.count -eq 1){
+            az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
+          }
+
       # Run Chaos Experiments
       - name: Run Chaos Experiments
         shell: pwsh
         run: |
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"    
+          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
-      
+
       # https://github.com/Azure/load-testing
-      - name: 'Create Azure Load Test'
+      - name: "Create Azure Load Test"
         uses: azure/load-testing@v1
         with:
           resourceGroup: ${{ secrets.AZURE_RG }}
