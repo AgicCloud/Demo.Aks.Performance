@@ -173,8 +173,8 @@ jobs:
         id: ChaosMeshPodFaultsExperiment
         uses: azure/arm-deploy@v1
         with:
-          subscriptionId: '6a37c895-4239-4b1e-bc34-a48c4994cc8a'
-          resourceGroupName: 'rg-poc-demo-performance'
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
           parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="ChaosMeshPodFaultsExperiment"
           failOnStdErr: false
