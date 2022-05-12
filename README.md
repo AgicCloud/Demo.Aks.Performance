@@ -30,7 +30,7 @@ The first thing to do before installation is to fork your repository.
 ## Prerequisites
 
 - The Azure AD user to be used in this project must be a subscription owner.
-- A Container Registry with an image. If you don't have a container registry with an image check the file **README-createImageForTest.md** (in the repository).
+- A Container Registry with an image. If you don't have a container registry with an image check the file [README-createImageForTest.md](README-createImageForTest.md).
 
 # Installation
 
@@ -160,17 +160,17 @@ If you have followed all the previous steps you can now start the pipeline, whic
 - Enter the required inputs:
   1. **Set the name of the Container Registry Resource Group** = Set the name of the resource group where the container registry is deployed
   2. **Set Container Registry Name** = Name of container registry that contains the image of the web app to be tested. In the next paragraph it's explained how to get this value
-  3. **Set Image Name** = Name of the Image present in the container registry to be tested. In the next paragraph it's explained how to get this value
-  4. **Set Image Tag** = The Tag of Image to be tested. In the next paragraph it's explained how to get this value
-  5. **Set App Replicas** = Number of instances of the web app to be tested.
-  6. **Choice Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create.
+  3. **Set Image Name** = Name of the image present in the container registry to be tested. In the next paragraph it's explained how to get this value
+  4. **Set Image Tag** = The Tag of the image to be tested. In the next paragraph it's explained how to get this value
+  5. **Set App Replicas** = The desired number of instances of the web app
+  6. **Choice Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
 
-- The values **1**, **2** must match the Container Registry values used before, and cannot be changed
+- The values **1**, **2** must match an existent Container Registry and should not be changed after the first pipeline run.
 - The value **6** cannot be changed after the first pipeline run.
 - The values **3**, **4** can be changed to test different web apps present in the same Container Registry.
-- The value **5** can be changed to test different load
+- The value **5** can be changed to test different load.
 
 ### **How to set correct values for Container Registry Name, Image Name and Image Tag**
 
@@ -182,12 +182,12 @@ You can find those values in the Container Registry --> Repositories page
 - The string labeled 3 Image tag
 
 - When you have entered all the inputs, click the green button "Run workflow"
-- The workflow creates the Azure resources, then deploy
+- The workflow creates the Azure resources, then deploys the apps in the AKS cluster.
 
 ## 8. Retrieve IP for testing
 
-When the pipeline has reached completed status, you can retrieve the IP address of wour web app to test it.
-If you do not know how to retrieve it you need to go to the file: **README-getExternalIP.md** (in the repository) and follow one of two ways.
+When the pipeline has completed, you can retrieve the IP address of your web app to test it.
+If you do not know how to retrieve it you need to go to the file: [README-getExternalIP.md](README-getExternalIP.md) and follow one of the two ways.
 
 ## 9. Test the Service
 
