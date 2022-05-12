@@ -90,7 +90,7 @@ Sample
 Create the following GitHub secrets 
 - **AZURE_RG** containing the Resource Group Name to be created. This Resource Group will contain all the Azure resources created by this project. To remove all those resources, you can delete this Resource Group
 - **AZURE_SUBSCRIPTION** containing the Azure Subscription ID, where the Resource Group will be created
-- **GRAFANA_ADMIN_PASSWORD** containing the password to access Grafana .
+- **GRAFANA_ADMIN_PASSWORD** containing the password to access Grafana.
 
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
