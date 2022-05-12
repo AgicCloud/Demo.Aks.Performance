@@ -10,9 +10,9 @@ env:
   IMAGETAG: ""
   IMAGEREPLICAS: ""
   AGENTVMSIZE: ""
-  APPNAME: "appname-fb-001"
-  KUBERNETESSERVICENAME: "aks-fb-001"
-  AZURELOADTESTINGNAME: "alt-fb-001"
+  APPNAME: "finaltestdemo"
+  KUBERNETESSERVICENAME: "demo-performance-aks"
+  AZURELOADTESTINGNAME: "demo-performance-alt"
   CLUSTERIP: ""
   NODEPOOLS: ""
 
