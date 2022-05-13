@@ -7,7 +7,7 @@ param experimentConfiguration object
 
 param actionName string
 
-var targetId = '/subscriptions/${ subscription().subscriptionId }/resourceGroups/${ resourceGroup().name }/providers/Microsoft.ContainerService/managedClusters/${ aksName }/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh'
+var targetId = '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.ContainerService/managedClusters/${aksName}/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh'
 
 resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
   name: experimentName
@@ -38,7 +38,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
               {
                 type: 'continuous'
                 selectorId: 'Selector1'
-                duration: 'PT10M'
+                duration: 'PT5M'
                 parameters: [
                   {
                     key: 'jsonSpec'
