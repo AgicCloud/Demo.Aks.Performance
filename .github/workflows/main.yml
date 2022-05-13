@@ -193,16 +193,7 @@ jobs:
           if($getAssignmentResult.count -eq 1){
             az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
           }
-
-      # Run Chaos Experiments
-      - name: Run Chaos Experiments
-        shell: pwsh
-        run: |
-          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
-          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
-          az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
-
+      
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
         uses: azure/load-testing@v1
@@ -217,3 +208,12 @@ jobs:
                 "value": "${{ env.CLUSTERIP }}"
                 }
             ]
+
+      # Run Chaos Experiments
+      - name: Run Chaos Experiments
+        shell: pwsh
+        run: |
+          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
+          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
+          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
