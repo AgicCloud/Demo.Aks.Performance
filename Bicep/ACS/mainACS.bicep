@@ -36,13 +36,18 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
             name: 'Branch 1'
             actions: [
               {
+                type: 'delay'
+                duration: 'PT1M'
+                name: 'urn:csci:microsoft:chaosStudio:TimedDelay/1.0'
+              }
+              {
                 type: 'continuous'
                 selectorId: 'Selector1'
                 duration: 'PT30S'
                 parameters: [
                   {
                     key: 'jsonSpec'
-                    value: '{"action":"pod-failure","mode":"all","duration":"${experimentConfiguration.duration}","selector":{"namespaces":["${experimentConfiguration.namespace}"]}}'
+                    value: '{"action":"pod-failure","mode":"one","duration":"${experimentConfiguration.duration}","selector":{"namespaces":["${experimentConfiguration.namespace}"]}}'
                   }
                 ]
                 name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:${actionName}/2.1'
@@ -59,7 +64,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
                 parameters: [
                   {
                     key: 'jsonSpec'
-                    value: '{"action":"pod-failure","mode":"all","duration":"${experimentConfiguration.duration}","selector":{"namespaces":["${experimentConfiguration.namespace}"]}}'
+                    value: '{"action":"pod-failure","mode":"one","duration":"${experimentConfiguration.duration}","selector":{"namespaces":["${experimentConfiguration.namespace}"]}}'
                   }
                 ]
                 name: 'urn:csci:microsoft:azureKubernetesServiceChaosMesh:${actionName}/2.1'
