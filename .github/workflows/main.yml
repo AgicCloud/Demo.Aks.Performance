@@ -201,9 +201,9 @@ jobs:
           if($getAssignmentResult.count -eq 1){
             az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
           }
-  # Map a step output to a job output
-  outputs:
-    experimentName: ${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}
+    # Map a step output to a job output
+    outputs:
+      experimentName: ${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}
 
   Run Chaos Experiment:
     # The type of runner that the job will run on
