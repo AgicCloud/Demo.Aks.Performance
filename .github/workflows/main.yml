@@ -6,7 +6,7 @@ name: Manual-Deploy
 env:
   APPNAME: "finaltestdemo"
   KUBERNETESSERVICENAME: "demo-performance-aks"
-  AZURELOADTESTINGNAME: "demo-performance-alt"
+  AZURELOADTESTINGNAME: "demo-performance-alt1"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
@@ -258,8 +258,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checkout last version code from Main branch
-      # - name: Checkout last version code from Main branch
-      #   uses: actions/checkout@main
+      - name: Checkout last version code from Main branch
+        uses: actions/checkout@main
 
       # Log into Azure
       - name: Log into Azure
@@ -267,18 +267,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Set env to Input
-      # - name: Set the value
-      #   id: step_one
-      #   run: |
-      #     echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
-      #     echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
-      #     echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
-      #     echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
-      #     echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
-      #     echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
-      #     echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
-      #     echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
+      # Deploy Bicep file Azure Load Testing --- TODO Param northeurope
+      - name: Deploy Bicep file Azure Load Testing
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/ALT/mainALT.bicep
+          parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
+          failOnStdErr: false
 
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
