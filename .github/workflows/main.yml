@@ -104,7 +104,7 @@ jobs:
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
         run: |
-          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" 
+          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}"
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
@@ -113,7 +113,7 @@ jobs:
       - name: Assign role to Kubernetes service user to access Container Registry image
         shell: pwsh
         run: |
-          sleep 15         
+          sleep 15
           $ACR_ID = $(az acr show --name "${{ env.CONTAINERREGISTRYNAME }}"  --resource-group "${{ env.CONTAINERREGISTRYRESOURCEGROUP }}" --query "id" --output tsv)
           az aks update -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}" --attach-acr "$ACR_ID"
 
