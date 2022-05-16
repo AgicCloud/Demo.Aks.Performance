@@ -4,10 +4,10 @@ name: Manual-Deploy
 # Global Variables
 
 env:
-  APPNAME: "finaltestdemo"
-  KUBERNETESSERVICENAME: "demo-performance-aks"
-  AZURELOADTESTINGNAME: "demo-performance-alt"
-  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
+  APPNAME: "finaltestdemo1"
+  KUBERNETESSERVICENAME: "demo-performance-aks1"
+  AZURELOADTESTINGNAME: "demo-performance-alt1"
+  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment1"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
   REPOSITORYNAME: ""
