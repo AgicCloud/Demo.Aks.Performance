@@ -248,21 +248,6 @@ jobs:
           $EXPERIMENT_NAME = "${{ needs.deploy-infrastructure.outputs.experimentName }}"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
 
-      # https://github.com/Azure/load-testing
-      - name: "Create Azure Load Test"
-        uses: azure/load-testing@v1
-        with:
-          resourceGroup: ${{ secrets.AZURE_RG }}
-          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
-          loadTestConfigFile: ./Bicep/ALT/config.yaml
-          env: |
-            [
-                {
-                "name": "webapp",
-                "value": "${{ env.CLUSTERIP }}"
-                }
-            ]
-
   run-azure-load-test:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
