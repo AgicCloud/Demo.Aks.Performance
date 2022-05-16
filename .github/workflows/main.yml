@@ -258,8 +258,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checkout last version code from Main branch
-      - name: Checkout last version code from Main branch
-        uses: actions/checkout@main
+      # - name: Checkout last version code from Main branch
+      #   uses: actions/checkout@main
 
       # Log into Azure
       - name: Log into Azure
@@ -268,17 +268,17 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Set env to Input
-      - name: Set the value
-        id: step_one
-        run: |
-          echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
-          echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
-          echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
-          echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
-          echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
-          echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
-          echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
-          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
+      # - name: Set the value
+      #   id: step_one
+      #   run: |
+      #     echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
+      #     echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
+      #     echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
+      #     echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
+      #     echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
+      #     echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
+      #     echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
+      #     echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
 
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
