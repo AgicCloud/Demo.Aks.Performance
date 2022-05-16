@@ -230,5 +230,6 @@ jobs:
           sleep 120
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          # $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
