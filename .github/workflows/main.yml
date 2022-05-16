@@ -4,15 +4,16 @@ name: Manual-Deploy
 # Global Variables
 
 env:
+  APPNAME: "finaltestdemo"
+  KUBERNETESSERVICENAME: "demo-performance-aks"
+  AZURELOADTESTINGNAME: "demo-performance-alt"
+  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
   REPOSITORYNAME: ""
   IMAGETAG: ""
   IMAGEREPLICAS: ""
   AGENTVMSIZE: ""
-  APPNAME: "finaltestdemo"
-  KUBERNETESSERVICENAME: "demo-performance-aks"
-  AZURELOADTESTINGNAME: "demo-performance-alt"
   CLUSTERIP: ""
   NODEPOOLS: ""
 
@@ -32,12 +33,18 @@ on:
       IMAGETAG:
         description: "Set the image tag"
         required: true
+        default: "latest"
+
       IMAGEREPLICAS:
         description: "Set the number of app replicas"
         required: true
+        default: "3"
+
       NODEPOOLS:
         description: "Set the number of nodes"
         required: true
+        default: "3"
+
       AGENTVMSIZE:
         description: "Choose the kubernetes node VM size"
         type: choice
@@ -53,7 +60,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  Deploy:
+  Deploy Infrastructure:
+    name: deploy-infrastructure
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -94,7 +102,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE}}" agentCount="${{ env.NODEPOOLS}}"
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE }}" agentCount="${{ env.NODEPOOLS }}"
           failOnStdErr: false
 
       # Kubectl tool installer
@@ -159,7 +167,7 @@ jobs:
 
           az rest --method put --url "https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME/providers/Microsoft.Chaos/targets/Microsoft-AzureKubernetesServiceChaosMesh/capabilities/PodChaos-2.1?api-version=2021-09-15-preview"  --body '{\"properties\":{}}'
 
-      # Deploy Bicep file Azure Load Testing
+      # Deploy Bicep file Azure Load Testing --- TODO Param northeurope
       - name: Deploy Bicep file Azure Load Testing
         uses: azure/arm-deploy@v1
         with:
@@ -177,7 +185,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="ChaosMeshPodFaultsExperiment"
+          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CHAOSMESHEXPERIMENTNAME }}"
           failOnStdErr: false
 
       # Assign experiment permission to your AKS cluster
@@ -193,15 +201,98 @@ jobs:
           if($getAssignmentResult.count -eq 1){
             az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
           }
+  # Map a step output to a job output
+  outputs:
+    experimentName: ${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}
+
+  Run Chaos Experiment:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: deploy-infrastructure
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checkout last version code from Main branch
+      - name: Checkout last version code from Main branch
+        uses: actions/checkout@main
+
+      # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Set env to Input
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
+          echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
+          echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
+          echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
+          echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
+          echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
+          echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
+          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
 
       # Run Chaos Experiments
+      - name: Sleep for 1 minute
+        shell: pwsh
+        run: |
+          sleep 60
+
       - name: Run Chaos Experiments
         shell: pwsh
         run: |
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          $EXPERIMENT_NAME = "${{ needs.deploy-infrastructure.outputs.experimentName }}"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
+
+      # https://github.com/Azure/load-testing
+      - name: "Create Azure Load Test"
+        uses: azure/load-testing@v1
+        with:
+          resourceGroup: ${{ secrets.AZURE_RG }}
+          loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
+          loadTestConfigFile: ./Bicep/ALT/config.yaml
+          env: |
+            [
+                {
+                "name": "webapp",
+                "value": "${{ env.CLUSTERIP }}"
+                }
+            ]
+
+  Run Azure Load Test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: deploy-infrastructure
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checkout last version code from Main branch
+      - name: Checkout last version code from Main branch
+        uses: actions/checkout@main
+
+      # Log into Azure
+      - name: Log into Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Set env to Input
+      - name: Set the value
+        id: step_one
+        run: |
+          echo "CONTAINERREGISTRYNAME=${{ github.event.inputs.CONTAINERREGISTRYNAME }}" >> $GITHUB_ENV
+          echo "REPOSITORYNAME=${{ github.event.inputs.REPOSITORYNAME }}" >> $GITHUB_ENV
+          echo "CONTAINERREGISTRYRESOURCEGROUP=${{ github.event.inputs.CONTAINERREGISTRYRESOURCEGROUP }}" >> $GITHUB_ENV
+          echo "AGENTVMSIZE=${{ github.event.inputs.AGENTVMSIZE }}" >> $GITHUB_ENV
+          echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
+          echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
+          echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
+          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
 
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
