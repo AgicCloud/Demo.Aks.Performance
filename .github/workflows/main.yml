@@ -4,15 +4,16 @@ name: Manual-Deploy
 # Global Variables
 
 env:
+  APPNAME: "finaltestdemo"
+  KUBERNETESSERVICENAME: "demo-performance-aks"
+  AZURELOADTESTINGNAME: "demo-performance-alt"
+  CAHOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
   REPOSITORYNAME: ""
   IMAGETAG: ""
   IMAGEREPLICAS: ""
   AGENTVMSIZE: ""
-  APPNAME: "finaltestdemo"
-  KUBERNETESSERVICENAME: "demo-performance-aks"
-  AZURELOADTESTINGNAME: "demo-performance-alt"
   CLUSTERIP: ""
   NODEPOOLS: ""
 
@@ -54,6 +55,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   Deploy:
+    name: deploy
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -84,7 +86,6 @@ jobs:
           echo "IMAGETAG=${{ github.event.inputs.IMAGETAG }}" >> $GITHUB_ENV
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
-          echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
 
       # Deploy Bicep file Kubernetes service
       - name: Deploy Bicep file Kubernetes service
@@ -177,11 +178,12 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="ChaosMeshPodFaultsExperiment"
+          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CAHOSMESHEXPERIMENTNAME }}"
           failOnStdErr: false
 
       # Assign experiment permission to your AKS cluster
       - name: Assign experiment permission to your AKS cluster
+        id: experimentPermission
         shell: pwsh
         run: |
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
@@ -193,14 +195,15 @@ jobs:
           if($getAssignmentResult.count -eq 1){
             az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
           }
-
-      # Run Chaos Experiments
+      
+      # Run Chaos Experiments      
       - name: Run Chaos Experiments
         shell: pwsh
         run: |
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          # $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
 
       # https://github.com/Azure/load-testing
