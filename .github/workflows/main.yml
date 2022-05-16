@@ -211,19 +211,7 @@ jobs:
                 "value": "51.138.124.97"
                 }
             ]
-  RunChaosExperiment:
-    name: runExperiment
-    runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      - name: "az version"
-        run: az version
-      # Log into Azure
-      - name: Log into Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      # Run Chaos Experiments      
+        # Run Chaos Experiments      
       - name: Run Chaos Experiments
         shell: pwsh
         run: |
@@ -233,3 +221,17 @@ jobs:
           # $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
           $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
           az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
+
+  # RunChaosExperiment:
+  #   name: runExperiment
+  #   runs-on: ubuntu-latest
+  #   # Steps represent a sequence of tasks that will be executed as part of the job
+  #   steps:
+  #     - name: "az version"
+  #       run: az version
+  #     # Log into Azure
+  #     - name: Log into Azure
+  #       uses: azure/login@v1
+  #       with:
+  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
