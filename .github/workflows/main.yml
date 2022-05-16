@@ -183,6 +183,7 @@ jobs:
 
       # Assign experiment permission to your AKS cluster
       - name: Assign experiment permission to your AKS cluster
+        id: experimentPermission
         shell: pwsh
         run: |
           $AKS_NAME = "${{ env.KUBERNETESSERVICENAME }}"
@@ -211,7 +212,7 @@ jobs:
             ]
   RunChaosExperiment:
     name: runExperiment
-    needs: deploy
+    needs: experimentPermission
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
