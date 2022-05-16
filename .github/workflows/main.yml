@@ -195,6 +195,7 @@ jobs:
           if($getAssignmentResult.count -eq 1){
             az role assignment create --role "Azure Kubernetes Service Cluster Admin Role" --assignee-object-id $EXPERIMENT_PRINCIPAL_ID --scope "subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.ContainerService/managedClusters/$AKS_NAME" --assignee-principal-type ServicePrincipal
           }
+          echo ::set-output name=exit_status::$?
       
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
@@ -212,12 +213,12 @@ jobs:
             ]
   RunChaosExperiment:
     name: runExperiment
-    needs: experimentPermission
     runs-on: ubuntu-latest
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Run Chaos Experiments
+      # Run Chaos Experiments      
       - name: Run Chaos Experiments
+        if: steps.experimentPermission.outputs.exit_status != 0
         shell: pwsh
         run: |
           sleep 60
