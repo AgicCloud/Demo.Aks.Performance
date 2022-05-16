@@ -4,10 +4,10 @@ name: Manual-Deploy
 # Global Variables
 
 env:
-  APPNAME: "finaltestdemo1"
-  KUBERNETESSERVICENAME: "demo-performance-aks1"
-  AZURELOADTESTINGNAME: "demo-performance-alt1"
-  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment1"
+  APPNAME: "finaltestdemo"
+  KUBERNETESSERVICENAME: "demo-performance-aks"
+  AZURELOADTESTINGNAME: "demo-performance-alt"
+  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
   REPOSITORYNAME: ""
@@ -50,14 +50,14 @@ on:
         type: choice
         required: true
         options:
+          - standard_d2as_v5
+          - standard_d4as_v5
           - standard_d2s_v5
           - standard_d4s_v5
           - standard_d8s_v5
           - standard_f2s_v2
           - standard_f4s_v2
           - standard_f8s_v2
-          - standard_d2as_v5
-          - standard_d4as_v5
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
