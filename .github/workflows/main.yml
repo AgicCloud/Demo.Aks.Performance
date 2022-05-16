@@ -281,3 +281,6 @@ jobs:
                 "value": "20.103.202.174"
                 }
             ]
+      - name: Azure logout
+        run: |
+          az logout
