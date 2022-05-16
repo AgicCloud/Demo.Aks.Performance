@@ -218,7 +218,7 @@ jobs:
     steps:
       # Run Chaos Experiments      
       - name: Run Chaos Experiments
-        if: steps.experimentPermission.outputs.exit_status != 0
+        if: jobs.deploy.steps.experimentPermission.outputs.exit_status != 0
         shell: pwsh
         run: |
           sleep 60
