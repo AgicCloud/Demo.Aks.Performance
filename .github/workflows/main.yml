@@ -197,6 +197,17 @@ jobs:
           }
           echo "::set-output name=texit_status::1"
       
+      # Run Chaos Experiments      
+      - name: Run Chaos Experiments
+        shell: pwsh
+        run: |
+          sleep 120
+          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
+          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
+          # $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
+          $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
+          az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
+
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
         uses: azure/load-testing@v1
@@ -211,17 +222,7 @@ jobs:
                 "value": "51.138.124.97"
                 }
             ]
-        # Run Chaos Experiments      
-      - name: Run Chaos Experiments
-        shell: pwsh
-        run: |
-          sleep 120
-          $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
-          $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
-          # $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
-          $EXPERIMENT_NAME = "ChaosMeshPodFaultsExperiment"
-          az rest --method post --uri https://management.azure.com/subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP/providers/Microsoft.Chaos/experiments/$EXPERIMENT_NAME/start?api-version=2021-09-15-preview
-
+        
   # RunChaosExperiment:
   #   name: runExperiment
   #   runs-on: ubuntu-latest
