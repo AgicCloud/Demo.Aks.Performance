@@ -227,7 +227,7 @@ jobs:
       - name: Run Chaos Experiments
         shell: pwsh
         run: |
-          sleep 180
+          sleep 120
           $RESOURCE_GROUP = "${{ secrets.AZURE_RG }}"
           $SUBSCRIPTION_ID = "${{ secrets.AZURE_SUBSCRIPTION }}"
           $EXPERIMENT_NAME = "${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}"
