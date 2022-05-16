@@ -279,7 +279,6 @@ jobs:
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
           echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
-          echo "CLUSTERIP=${{ needs.deploy-infrastructure.outputs.clusterip }}" >> $GITHUB_ENV
 
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
@@ -292,6 +291,6 @@ jobs:
             [
                 {
                 "name": "webapp",
-                "value": "${{ env.CLUSTERIP }}"
+                "value": "${{ needs.deploy-infrastructure.outputs.clusterip }}"
                 }
             ]
