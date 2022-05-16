@@ -155,6 +155,7 @@ Customize ONLY the value of the following keys:
   APPNAME:                        "demo"
   KUBERNETESSERVICENAME:          "DEMOKubernetesService"
   AZURELOADTESTINGNAME:           "DEMOAzureLoadTesting"
+  CAHOSMESHEXPERIMENTNAME:        "ChaosMeshPodFaultsExperiment"
 ```
 Then commit the changes, using the `Commit Changes` green button, using the ` Commit directly to the main branch` option
 
