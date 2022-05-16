@@ -50,13 +50,14 @@ on:
         type: choice
         required: true
         options:
-          - standard_d2as_v5
           - standard_d2s_v5
           - standard_d4s_v5
           - standard_d8s_v5
           - standard_f2s_v2
           - standard_f4s_v2
           - standard_f8s_v2
+          - standard_d2as_v5
+          - standard_d4as_v5
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -203,6 +204,7 @@ jobs:
     # Map a step output to a job output
     outputs:
       experimentName: ${{ steps.ChaosMeshPodFaultsExperiment.outputs.experimentName }}
+      clusterip: ${{ env.CLUSTERIP }}
 
   run-chaos-experiment:
     # The type of runner that the job will run on
@@ -277,6 +279,7 @@ jobs:
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
           echo "${{ secrets.AZURE_CREDENTIALS.clientId }}"
+          echo "CLUSTERIP=${{ needs.deploy-infrastructure.outputs.clusterip }}" >> $GITHUB_ENV
 
       # https://github.com/Azure/load-testing
       - name: "Create Azure Load Test"
