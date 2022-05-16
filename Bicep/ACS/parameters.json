@@ -4,7 +4,7 @@
     "parameters": {
         "experimentConfiguration": {
             "value": {
-                "duration": "300s",
+                "duration": "30s",
                 "namespace": "demo-performance"
             }
         }
