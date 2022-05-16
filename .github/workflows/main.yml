@@ -205,7 +205,7 @@ jobs:
             [
                 {
                 "name": "webapp",
-                "value": "${{ env.CLUSTERIP }}"
+                "value": "51.138.124.97"
                 }
             ]
 
