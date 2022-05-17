@@ -187,7 +187,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 - Select CI section.
 
-![image](https://user-images.githubusercontent.com/60384226/166693051-bee41a57-8afe-4582-9605-72c866e9ff5b.png)
+![pipeline](https://user-images.githubusercontent.com/33416347/168751095-60939047-9b87-414c-9fc9-0db261c5f79c.PNG)
 
 - Click on "Run Workflow".
 
