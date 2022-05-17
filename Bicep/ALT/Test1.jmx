@@ -12,7 +12,7 @@
             <stringProp name="Argument.name">udv_webapp</stringProp>
             <stringProp name="Argument.value">${__BeanShell( System.getenv("webapp") )}</stringProp>
             <stringProp name="Argument.desc">Web app URL</stringProp>
-            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp> 
           </elementProp>
         </collectionProp>
       </elementProp>
