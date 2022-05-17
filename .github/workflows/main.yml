@@ -6,7 +6,7 @@ name: Manual-Deploy
 env:
   APPNAME: "finaltestdemo"
   KUBERNETESSERVICENAME: "demo-performance-aks"
-  AZURELOADTESTINGNAME: "demo-performance-alt"
+  AZURELOADTESTINGNAME: "alt-demo-performance"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
