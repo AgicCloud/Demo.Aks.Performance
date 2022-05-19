@@ -89,7 +89,7 @@ Create a service principal identity, and assign the owner role to the group crea
 The command that creates the Service Principal is:
 
 ```console
-az ad sp create-for-rbac --name <SERVICE-PRINCIPAL-UNIQUE-NAME> --role owner --scopes <SUBSCRIPTION-ID> --sdk-auth
+az ad sp create-for-rbac --name <SERVICE-PRINCIPAL-UNIQUE-NAME> --role owner --scopes /subscriptions/<SUBSCRIPTION-ID> --sdk-auth
 ```
 
 Choose a Service Principal name that is unique inside you Azure Active Directory, and use it in place of `<SERVICE-PRINCIPAL-UNIQUE-NAME>`.
