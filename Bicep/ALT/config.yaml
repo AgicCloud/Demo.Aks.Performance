@@ -4,4 +4,3 @@ description: Test1
 engineInstances: 1
 # failureCriteria:
 # - avg(response_time_ms) > 300
-
