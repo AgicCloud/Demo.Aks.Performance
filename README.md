@@ -33,6 +33,7 @@ The first thing to do before installation is to fork your repository.
   To check if the AAD user is a subscription owner, open the Azure portal, then open the subscription, and check if the user is listed as Owner in the `Access Control (IAM)` blade, as you can see in the following image
   ![Immagine 2022-05-13 000205](https://user-images.githubusercontent.com/30232175/168175290-1d22e603-3e28-462f-aa05-d4a2d3d9b0a4.png)
 - A Container Registry with an image. If you don't have a container registry with an image check the file [README-createImageForTest.md](README-createImageForTest.md).
+- Docker Desktop installed https://www.docker.com/products/docker-desktop/
 
 # Installation
 
