@@ -1,7 +1,7 @@
-param name string //= 'DemoPerformanceLoadTesting'
-param location string //= 'northeurope'
+param name string
+param location string
 
-resource symbolicname 'Microsoft.LoadTestService/loadTests@2021-12-01-preview' = {
+resource loadTesting 'Microsoft.LoadTestService/loadTests@2021-12-01-preview' = {
   name: name
   location: location
   tags: {
@@ -10,7 +10,4 @@ resource symbolicname 'Microsoft.LoadTestService/loadTests@2021-12-01-preview' =
   identity: {
     type: 'SystemAssigned'
   }
-  // properties: {
-  //   description: 'string'
-  // }
 }

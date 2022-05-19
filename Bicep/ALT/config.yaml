@@ -2,5 +2,3 @@ testName: Test1
 testPlan: Test1.jmx
 description: Test1
 engineInstances: 1
-# failureCriteria:
-# - avg(response_time_ms) > 300
