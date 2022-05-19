@@ -1,6 +1,6 @@
-# How to create Image in a container registry - Azure CLI
+# How to create an Azure container registry and push the image in there - Azure CLI
 
-**Reference** = https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli
+**Reference** https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli
 
 ## 1. Login to Azure
 
@@ -10,16 +10,25 @@ Sample:
 az login
 ```
 
-Reference: https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli
-
-## 2. Login to Azure Container Registry
-
-Change "myregistry" with your container registry name.
+## 2. Create Azure container registry
 
 Sample:
 
 ```console
-az acr login --name myregistry
+az acr create --resource-group <resource-group-name> --name <acr-name> --sku Basic
+```
+**Reference** https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-azure-cli
+
+Reference: https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli
+
+## 2. Login to Azure Container Registry
+
+Change "acr-name" with your container registry name.
+
+Sample:
+
+```console
+az acr login --name <acr-name>
 ```
 
 ## 3. Pull a public image
@@ -45,5 +54,5 @@ docker tag mcr.microsoft.com/azuredocs/aks-helloworld:v1 myregistry.azurecr.io/s
 Sample:
 
 ```console
-docker push myregistry.azurecr.io/samples/test
+docker push <acr-name>.azurecr.io/samples/test
 ```
