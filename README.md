@@ -36,7 +36,7 @@ The first thing to do before installation is to fork your repository.
 - Docker Desktop installed https://www.docker.com/products/docker-desktop/
 - Azure CLI installed https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
-# Installation
+# Environment Setup
 
 ## 1. Resource group creation
 
@@ -353,13 +353,34 @@ https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-fault-library#a
 
 ---
 
-# Disinstallation
+# Environment Teardown
 
 To remove all the objects created, you must:
 
-1. Delete the resource group created in step #1. Open the resource groups view in Azure Portal, then select the resource group and delete it with the delete button
-2. Delete the service principal created. Go to Azure Active Directory in Azure Portal, then select `App Registration` blade, and then `Owned Applications` tab. Click `View All the Applications` button, search the Service principal, click on it, then delete it with the `Delete` button
+1. Delete the resource group created in step #1:
+   - From Azure portal <br/>
+      Open the resource groups view in Azure Portal, then select the resource group and delete it with the delete button
+   - From Azure CLI <br/>
+     ```console
+     az group delete --name <resource-group-name>
+     ```
+     **Reference** https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/delete-resource-group?tabs=azure-cli
+2. Delete the service principal created:
+   - From Azure portal <br/>
+      Go to Azure Active Directory in Azure Portal, then select `App Registration` blade, and then `Owned Applications` tab. Click `View All the Applications` button,       search the Service principal, click on it, then delete it with the `Delete` button
+   - from Azure CLI <br/>
+     Retrieve service principal id, replace the name of the service principal with the one chosen in the second step
+     ```console
+     $ID = az ad sp list --display-name <replace_with_service_principal_name> --query [].objectId -o tsv
+     ```
 
+     Delete service principal
+     ```console
+     az ad sp delete -- id $ID
+     ```
+     
+     **Reference** https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-list <br/>
+     **Reference** https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-delete
 ---
 
 # Other references
