@@ -21,7 +21,7 @@ az acr create --resource-group <resource-group-name> --name <acr-name> --sku Bas
 
 Reference: https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli
 
-## 2. Login to Azure Container Registry
+## 3. Login to Azure Container Registry
 
 Change "acr-name" with your container registry name.
 
@@ -31,7 +31,7 @@ Sample:
 az acr login --name <acr-name>
 ```
 
-## 3. Pull a public image
+## 4. Pull a public image
 
 This image is an example image.
 
@@ -41,7 +41,7 @@ Sample:
 docker pull mcr.microsoft.com/azuredocs/aks-helloworld:v1
 ```
 
-## 4. Create an alias of the image
+## 5. Create an alias of the image
 
 Sample:
 
@@ -49,7 +49,7 @@ Sample:
 docker tag mcr.microsoft.com/azuredocs/aks-helloworld:v1 myregistry.azurecr.io/samples/test
 ```
 
-## 5. Push the image to your registry
+## 6. Push the image to your registry
 
 Sample:
 
