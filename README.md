@@ -158,7 +158,7 @@ In your GitHub repo, go to Code, then browse to `.github\workflows\main.yml`
 
 ![image](https://user-images.githubusercontent.com/30232175/168174491-fd576870-cd5a-4790-8228-be66da3d6577.png)
 
-To edi the file, click the `Edit this file` icon.
+To edit the file, click the `Edit this file` icon.
 
 Then Customize ONLY the value of the following keys, using unique names
 
@@ -171,6 +171,10 @@ Customize ONLY the value of the following keys:
 ```
 
 Then commit the changes, using the `Commit Changes` green button, using the ` Commit directly to the main branch` option.
+
+| :warning: WARNING                                                                                            |
+| :----------------------------------------------------------------------------------------------------------- |
+|  The APPNAME value cannot be changed after the first pipeline run.                                           |
 
 | :warning: WARNING                                                                                            |
 | :----------------------------------------------------------------------------------------------------------- |
