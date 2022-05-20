@@ -108,10 +108,35 @@ jobs:
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
 
+      # AKS login 
+      - name: AKS login
+        run: az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}"
+
+      # Normalize release name
+      - name: Normalize release name
+        id: NormalizeReleaseName
+        run: |
+          RELEASE_NAME_LOWERCASE=$(echo ${{ env.APPNAME }} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
+          echo "::set-output name=normalizedReleaseName::$RELEASE_NAME_LOWERCASE"
+
+      # Remove old helm releases
+      - name: Remove old helm releases
+        shell: pwsh
+        run: |
+          $RELEASES =  helm list --filter ${{ steps.NormalizeReleaseName.outputs.normalizedReleaseName }}
+          if($RELEASES.Count -eq 1)
+          {
+            echo "No releases to delete!"
+          }
+          else
+          {
+            helm del $(helm ls --all --short)
+            echo "Releases removed!"
+          }
+
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
         run: |
-          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}"
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
