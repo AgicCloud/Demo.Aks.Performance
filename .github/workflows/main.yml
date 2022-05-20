@@ -93,16 +93,16 @@ jobs:
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
 
-      # Deploy Bicep file Kubernetes service
-      - name: Deploy Bicep file Kubernetes service
-        id: Kubernetes
-        uses: azure/arm-deploy@v1
-        with:
-          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-          resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/AKS/mainAKS.bicep
-          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE }}" agentCount="${{ env.NODEPOOLS }}"
-          failOnStdErr: false
+      # # Deploy Bicep file Kubernetes service
+      # - name: Deploy Bicep file Kubernetes service
+      #   id: Kubernetes
+      #   uses: azure/arm-deploy@v1
+      #   with:
+      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+      #     resourceGroupName: ${{ secrets.AZURE_RG }}
+      #     template: ./Bicep/AKS/mainAKS.bicep
+      #     parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE }}" agentCount="${{ env.NODEPOOLS }}"
+      #     failOnStdErr: false
 
       # Kubectl tool installer
       - name: Kubectl tool installer
