@@ -123,16 +123,7 @@ jobs:
       - name: Remove old helm releases
         shell: pwsh
         run: |
-          $RELEASES =  helm list --filter ${{ steps.NormalizeReleaseName.outputs.normalizedReleaseName }}
-          if($RELEASES.Count -eq 1)
-          {
-            echo "No releases to delete!"
-          }
-          else
-          {
-            helm del $(helm ls --all --short)
-            echo "Releases removed!"
-          }
+          helm del $(helm ls --all --short)
 
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
