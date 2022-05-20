@@ -128,7 +128,7 @@ jobs:
       - name: Deploy Container registry image to Kubernetes service
         run: |
           cd src/helloworld-service/user-service-chart
-          helm ls --all --short | xargs -L1 helm delete --purge
+          helm ls --all --short | xargs -L1 helm delete
           RELEASE_NAME_LOWERCASE=$(echo ${{ env.APPNAME }} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
           helm upgrade $RELEASE_NAME_LOWERCASE . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set app.name=${{ env.APPNAME }} --set image.replicas=${{ env.IMAGEREPLICAS }} --namespace "demo-performance" --create-namespace
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
