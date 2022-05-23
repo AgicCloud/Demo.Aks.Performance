@@ -79,9 +79,6 @@ metadata:
     ver: {{ .Chart.AppVersion }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ports:
     - port: 80
   selector:
