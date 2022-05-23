@@ -17,6 +17,9 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
+  nodeSelector:
+    "beta.kubernetes.io/os": linux
+    "type": user-node
   ingressClassName: nginx
   rules:
   - http:
@@ -76,12 +79,15 @@ metadata:
     ver: {{ .Chart.AppVersion }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
+  nodeSelector:
+    "beta.kubernetes.io/os": linux
+    "type": user-node
   ports:
     - port: 80
   selector:
     app: user-app
 ---
-# Applicatzione da testare
+# Applicazione da testare
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -108,6 +114,7 @@ spec:
     spec:
       nodeSelector:
         "beta.kubernetes.io/os": linux
+        "type": user-node
       containers:
       - name: user-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -118,5 +125,19 @@ spec:
             cpu: 250m
             memory: 128M
           limits:
-            cpu: 500m
-            memory: 512M
+            cpu: 250m
+            memory: 128M
+---
+#Autoscaler
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: user-app-hpa
+spec:
+  maxReplicas: 30 # define max replica count
+  minReplicas: 3  # define min replica count
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: user-app-deploy
+  targetCPUUtilizationPercentage: 50 # target CPU utilization
