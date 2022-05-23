@@ -17,9 +17,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ingressClassName: nginx
   rules:
   - http:
