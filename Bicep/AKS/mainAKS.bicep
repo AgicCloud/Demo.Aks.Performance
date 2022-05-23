@@ -29,12 +29,30 @@ resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
         enableAutoScaling: true
         minCount: 1
         maxCount: agentCount
-        count: agentCount
+        count: 1
         vmSize: agentVMSize
         osType: 'Linux'
         mode: 'System'
+        type: 'VirtualMachineScaleSets'
+      }
+      {
+        name: 'apppool'
+        osDiskSizeGB: osDiskSizeGB
+        enableAutoScaling: true
+        minCount: 1
+        maxCount: agentCount
+        count: 1
+        vmSize: agentVMSize
+        osType: 'Linux'
+        mode: 'User'
+        type: 'VirtualMachineScaleSets'
+        maxPods: 30
+        nodeLabels: {
+          type: 'user-node'
+        }
       }
     ]
+
     linuxProfile: {
       adminUsername: linuxAdminUsername
       ssh: {

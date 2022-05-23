@@ -38,7 +38,7 @@ on:
       IMAGEREPLICAS:
         description: "Set the number of app replicas"
         required: true
-        default: "3"
+        default: "10"
 
       NODEPOOLS:
         description: "Set the number of nodes"
