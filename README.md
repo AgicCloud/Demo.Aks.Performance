@@ -17,20 +17,20 @@ This project contains a pipeline that deploys all the previous components to an 
 - Prometheus and Grafana to monitor the web app metrics
 - the Chaos Mesh to simulate random faults
 
-Finally creates and run the JMeter load test and the Chaos Experiment during the load test, to simulate random faults.
+Finally creates and runs the JMeter load test and the Chaos Experiment during the load test, to cause really high CPU usage in your app pods.
 
 ## Getting Started
 
-Follow the instructions to prepare the environment before start the pipeline.
+Follow the instructions to prepare the environment before starting the pipeline.
 
-The first thing to do before installation is to fork your repository.
+The first step you need to do before the environment setup is to fork your repository.
 
 ![fork](https://user-images.githubusercontent.com/60384226/166690858-8a6bb4d6-198c-4e6e-931b-6dc0148c181c.png)
 
 ## Prerequisites
 
-- The Azure AD user to be used in this project must be a subscription owner.
-  To check if the AAD user is a subscription owner, open the Azure portal, then open the subscription, and check if the user is listed as Owner in the `Access Control (IAM)` blade, as you can see in the following image
+- To be able to follow this tutorial you must be a subscription owner.
+  To check if your user is a subscription owner, open the Azure portal, then open the subscription, and check if your user is listed as Owner in the `Access Control (IAM)` blade, as you can see in the following image
   ![Immagine 2022-05-13 000205](https://user-images.githubusercontent.com/30232175/168175290-1d22e603-3e28-462f-aa05-d4a2d3d9b0a4.png)
 - A Container Registry with an image. If you don't have a container registry with an image check the file [README-createImageForTest.md](README-createImageForTest.md).
 - Docker Desktop installed https://www.docker.com/products/docker-desktop/
@@ -86,7 +86,7 @@ Reference: https://docs.microsoft.com/en-us/cli/azure/group?view=azure-cli-lates
 
 Create a service principal identity, and assign the owner role to the group created in the previous step.
 
-> VERY IMPORTANT: Save the statement output in Notepad for use in the next step. If you forget this output, you won't be able to launch the GitHub Action
+> VERY IMPORTANT: Save the command output in Notepad, you will need it in the next step. If you forget this output, you won't be able to launch the GitHub Action
 
 The command that creates the Service Principal is:
 
@@ -146,11 +146,15 @@ Create the following GitHub secrets
 - **AZURE_RG** containing the Resource Group Name that has been created in the first step of this tutorial. All the Azure resources will be created in this resource group.To remove all those resources, you can delete this Resource Group.
 - **AZURE_SUBSCRIPTION** containing the Azure Subscription ID, where the Resource Group was created in the first step of this tutorial.
 - **GRAFANA_ADMIN_PASSWORD** containing the password to access Grafana. This can be a random guid.
+| :warning: WARNING                                                                                            |
+| :----------------------------------------------------------------------------------------------------------- |
+|  Also save the value you used for GRAFANA_ADMIN_PASSWORD in the notepad as you won't be able to read it from github after saving it.|
+
 
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
-## 5. Customize resources names file
+## 5. Customize the main.yml file
 
 Customize the resources names file `.github\workflows\main.yml`.
 
@@ -220,7 +224,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
   3. **Set Image Name** = Name of the image present in the container registry to be tested. In the next paragraph it's explained how to get this value
   4. **Set Image Tag** = The Tag of the image to be tested. In the next paragraph it's explained how to get this value
   5. **Set App Replicas** = The desired number of instances of the web app
-  6. **Choice Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
+  6. **Choose Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
 
@@ -250,7 +254,7 @@ If you do not know how to retrieve it you need to go to the file: [README-getExt
 
 ## 9. Test the Service
 
-Now that you have retrieved the public IP address of the web app, you can load your web app home page at `http://<PUBLIC_IP_ADDRESS>`, and go to `http://<PUBLIC_IP_ADDRESS>/grafana` you can login in Grafana.
+Now that you have retrieved the public IP address of the web app, you can load your web app home page at `http://<PUBLIC_IP_ADDRESS>`, and going to `http://<PUBLIC_IP_ADDRESS>/grafana` you can login in Grafana.
 
 ![Grafana](https://user-images.githubusercontent.com/60384226/166918755-9eaaabe9-802e-40cb-b96c-83dd1947ac5b.gif)
 
@@ -299,7 +303,7 @@ Here's how to do it
 
 2. Edit the github workflow
 
-   Modify the `.github/workflows/main.yaml` file by adding the new vm after line 57. Write the name in lower case.
+   Modify the `.github/workflows/main.yaml` file by adding the new vm in the AGENTVMSIZE input. Write the name in lower case.
    You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 ## Configure your web app
@@ -316,7 +320,7 @@ After the pipeline first launch, you can perform load testing using the Azure Lo
 
 ## Default Chaos Experiment configuration
 
-The experiment used in the pipeline disables the application pods for some minutes.
+The experiment used in the pipeline causes a very high CPU usage in your app pods for some minutes.
 
 Before the first pipeline run, you can change this behavior configuring the json file located in "./Bicep/ACS/parameters.json".
 The configurable value is:
