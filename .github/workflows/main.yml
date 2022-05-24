@@ -4,7 +4,7 @@ name: Manual-Deploy
 # Global Variables
 
 env:
-  APPNAME: "finaltestdemo_2"
+  APPNAME: "finaltestdemo"
   KUBERNETESSERVICENAME: "demo-performance-aks"
   AZURELOADTESTINGNAME: "demo-performance-alt"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
@@ -93,50 +93,25 @@ jobs:
           echo "IMAGEREPLICAS=${{ github.event.inputs.IMAGEREPLICAS }}" >> $GITHUB_ENV
           echo "NODEPOOLS=${{ github.event.inputs.NODEPOOLS }}" >> $GITHUB_ENV
 
-      # # Deploy Bicep file Kubernetes service
-      # - name: Deploy Bicep file Kubernetes service
-      #   id: Kubernetes
-      #   uses: azure/arm-deploy@v1
-      #   with:
-      #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-      #     resourceGroupName: ${{ secrets.AZURE_RG }}
-      #     template: ./Bicep/AKS/mainAKS.bicep
-      #     parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE }}" agentCount="${{ env.NODEPOOLS }}"
-      #     failOnStdErr: false
+      # Deploy Bicep file Kubernetes service
+      - name: Deploy Bicep file Kubernetes service
+        id: Kubernetes
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+          resourceGroupName: ${{ secrets.AZURE_RG }}
+          template: ./Bicep/AKS/mainAKS.bicep
+          parameters: name="${{ env.KUBERNETESSERVICENAME }}" agentVMSize="${{ env.AGENTVMSIZE }}" agentCount="${{ env.NODEPOOLS }}"
+          failOnStdErr: false
 
       # Kubectl tool installer
       - name: Kubectl tool installer
         uses: Azure/setup-kubectl@v2.1
 
-      # AKS login 
-      - name: AKS login
-        run: az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}"
-
-      # Normalize release name
-      - name: Normalize release name
-        id: NormalizeReleaseName
-        run: |
-          RELEASE_NAME_LOWERCASE=$(echo ${{ env.APPNAME }} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
-          echo "::set-output name=normalizedReleaseName::$RELEASE_NAME_LOWERCASE"
-
-      # Remove old helm releases
-      - name: Remove old helm releases
-        shell: pwsh
-        run: |
-          $RELEASES =  helm list
-          if($RELEASES.Count -eq 1)
-          {
-            echo "Release updated!"
-          }
-          else
-          {
-            helm del $(helm ls --all --short)
-            echo "Release removed!"
-          }
-
       # Deploy Nginx Reverse Proxy service to Kubernetes
       - name: Deploy Nginx Reverse Proxy service to Kubernetes
         run: |
+          az aks get-credentials -n "${{ env.KUBERNETESSERVICENAME }}" -g "${{ secrets.AZURE_RG }}"
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           helm upgrade nginx ingress-nginx/ingress-nginx --install
@@ -154,7 +129,7 @@ jobs:
         run: |
           cd src/helloworld-service/user-service-chart
           RELEASE_NAME_LOWERCASE=$(echo ${{ env.APPNAME }} | tr -dc '[:alnum:]\n\r' | tr '[:upper:]' '[:lower:]')
-          helm upgrade $RELEASE_NAME_LOWERCASE . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set image.replicas=${{ env.IMAGEREPLICAS }} --namespace "demo-performance" --create-namespace
+          helm upgrade $RELEASE_NAME_LOWERCASE . --install --set image.repository=${{ env.CONTAINERREGISTRYNAME }}.azurecr.io/${{ env.REPOSITORYNAME }} --set image.tag=${{ env.IMAGETAG }} --set app.name=${{ env.APPNAME }} --set image.replicas=${{ env.IMAGEREPLICAS }} --namespace "demo-performance" --create-namespace
           echo "CLUSTERIP=$(kubectl get service "nginx-ingress-nginx-controller" -n default -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> $GITHUB_ENV
 
       # Deploy Prometheus service to Kubernetes
