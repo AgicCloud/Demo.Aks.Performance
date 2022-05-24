@@ -17,9 +17,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ingressClassName: nginx
   rules:
   - http:
@@ -79,9 +76,6 @@ metadata:
     ver: {{ .Chart.AppVersion }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ports:
     - port: 80
   selector:

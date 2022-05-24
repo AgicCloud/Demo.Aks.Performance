@@ -5,7 +5,7 @@ name: Manual-Deploy
 
 env:
   APPNAME: "finaltestdemo"
-  KUBERNETESSERVICENAME: "demo-performance-aks"
+  KUBERNETESSERVICENAME: "demo-performance-akss"
   AZURELOADTESTINGNAME: "demo-performance-alt"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
@@ -185,7 +185,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CHAOSMESHEXPERIMENTNAME }}"
+          parameters: ./Bicep/ACS/parameters.json actionName="stressChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CHAOSMESHEXPERIMENTNAME }}"
           failOnStdErr: false
 
       # Assign experiment permission to your AKS cluster
