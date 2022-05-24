@@ -38,7 +38,7 @@ on:
       IMAGEREPLICAS:
         description: "Set the number of app replicas"
         required: true
-        default: "3"
+        default: "10"
 
       NODEPOOLS:
         description: "Set the number of nodes"
@@ -162,7 +162,7 @@ jobs:
         run: |
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo update
-          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values src/helloworld-service/prometheus.values.demo.yaml --wait --debug --atomic --timeout 600s --set grafana.adminPassword="${{ secrets.GRAFANA_ADMIN_PASSWORD }}" --namespace "prometheus" --create-namespace
+          helm upgrade --install prometheus-stack prometheus-community/kube-prometheus-stack --values src/helloworld-service/prometheus.values.demo.yaml --wait --atomic --timeout 600s --set grafana.adminPassword="${{ secrets.GRAFANA_ADMIN_PASSWORD }}" --namespace "prometheus" --create-namespace
 
       # Set up Chaos Mesh on your AKS cluster
       - name: Set up Chaos Mesh on AKS cluster
@@ -210,7 +210,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
           template: ./Bicep/ACS/mainACS.bicep
-          parameters: ./Bicep/ACS/parameters.json actionName="podChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CHAOSMESHEXPERIMENTNAME }}"
+          parameters: ./Bicep/ACS/parameters.json actionName="stressChaos" aksName="${{ env.KUBERNETESSERVICENAME }}" experimentName="${{ env.CHAOSMESHEXPERIMENTNAME }}"
           failOnStdErr: false
 
       # Assign experiment permission to your AKS cluster
