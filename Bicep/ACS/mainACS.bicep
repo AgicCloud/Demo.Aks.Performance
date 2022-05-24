@@ -43,7 +43,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
               {
                 type: 'continuous'
                 selectorId: 'Selector1'
-                duration: 'PT120S'
+                duration: 'PT2M'
                 parameters: [
                   {
                     key: 'jsonSpec'
@@ -60,7 +60,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
               {
                 type: 'continuous'
                 selectorId: 'Selector1'
-                duration: 'PT120S'
+                duration: 'PT2M'
                 parameters: [
                   {
                     key: 'jsonSpec'
@@ -77,7 +77,7 @@ resource experiment 'Microsoft.Chaos/experiments@2021-09-15-preview' = {
               {
                 type: 'continuous'
                 selectorId: 'Selector1'
-                duration: 'PT120S'
+                duration: 'PT2M'
                 parameters: [
                   {
                     key: 'jsonSpec'
