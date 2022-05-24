@@ -7,7 +7,7 @@ env:
   APPNAME: "finaltestdemo"
   KUBERNETESSERVICENAME: "demo-performance-aks"
   AZURELOADTESTINGNAME: "demo-performance-alt"
-  CHAOSMESHEXPERIMENTNAME: "ChaosMeshPodFaultsExperiment"
+  CHAOSMESHEXPERIMENTNAME: "ChaosMeshStressFaultsExperiment"
   CONTAINERREGISTRYRESOURCEGROUP: ""
   CONTAINERREGISTRYNAME: ""
   REPOSITORYNAME: ""
