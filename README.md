@@ -312,11 +312,20 @@ You can change yor web app configuration in the Helm Chart. You have to edit the
 
 After the editing, yo shoud re-run the pipeline.
 
-## Azure Load Test
+## Azure Load Testing
 
 Before the first pipeline run, you can change the default load test file, that you can find in `Bicep\ALT\Test1.jmx`. This load test file can be edited with [Apache JMeter](https://jmeter.apache.org/). You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 After the pipeline first launch, you can perform load testing using the Azure Load Testing resource created, you can find the documentation [at this link](https://docs.microsoft.com/en-us/azure/load-testing/)
+
+| :warning: WARNING                                                                                            |
+| :----------------------------------------------------------------------------------------------------------- |
+| Please check that you have sufficient permissions to see the load test results |
+If you see an error like this one:
+![image](https://user-images.githubusercontent.com/85103736/170235711-8c13b1f9-f31b-4787-8950-739261b525b5.png)
+You can solve it by going in the Access Control blade of your Azure Load Testing detail and assigning yourself one of these roles:
+![image](https://user-images.githubusercontent.com/8000532/170243532-97bc1dba-aec8-40b0-8cf3-6472124cc51e.png)
+
 
 ## Default Chaos Experiment configuration
 
