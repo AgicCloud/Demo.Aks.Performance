@@ -15,7 +15,8 @@ spec:
         app: three-tier-app-api
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": linux
+        "kubernetes.io/os": linux
+        #Comment if trying locally
         "type": user-node
       containers:
         - name: three-tier-app-api
