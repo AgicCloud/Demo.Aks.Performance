@@ -109,7 +109,7 @@ spec:
       nodeSelector:
         "kubernetes.io/os": linux
         #Comment if trying locally
-        #"type": user-node
+        "type": user-node
       containers:
       - name: user-app
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

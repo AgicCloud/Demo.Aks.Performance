@@ -17,7 +17,7 @@ spec:
       nodeSelector:
         "kubernetes.io/os": linux
         #Comment if trying locally
-        #"type": user-node
+        "type": user-node
       containers:
         - name: redis-db
           image: redis:latest
