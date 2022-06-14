@@ -51,6 +51,7 @@ apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
   name: three-tier-app-api-hpa
+  namespace: {{ .Values.Namespace }}
 spec:
   maxReplicas: 30 # define max replica count
   minReplicas: 3  # define min replica count
