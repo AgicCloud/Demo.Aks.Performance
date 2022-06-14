@@ -154,11 +154,11 @@ Create the following GitHub secrets
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
-## 5. Customize the main.yml file
+## 5. Customize the base-scenario.yml file
 
-Customize the resources names file `.github\workflows\main.yml`.
+Customize the resources names file `.github\workflows\base-scenario.yml`.
 
-In your GitHub repo, go to Code, then browse to `.github\workflows\main.yml`
+In your GitHub repo, go to Code, then browse to `.github\workflows\base-scenario.yml`
 
 ![image](https://user-images.githubusercontent.com/30232175/168174491-fd576870-cd5a-4790-8228-be66da3d6577.png)
 
