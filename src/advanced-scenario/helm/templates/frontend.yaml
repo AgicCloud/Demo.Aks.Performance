@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: three-tier-app-front
-  namespace: { { .Values.Namespace } }
+  namespace: {{ .Values.Namespace }}
 spec:
   replicas: 2
   selector:
@@ -37,11 +37,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: three-tier-app-front-sv
-  namespace: { { .Values.Namespace } }
+  namespace: {{ .Values.Namespace }}
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   type: LoadBalancer
   ports:
     - port: 80
