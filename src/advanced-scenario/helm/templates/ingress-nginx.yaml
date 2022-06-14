@@ -3,13 +3,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: user-ingress
-  namespace: { { .Values.Namespace } }
+  namespace: {{ .Values.Namespace }}
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ingressClassName: nginx
   rules:
     - http:

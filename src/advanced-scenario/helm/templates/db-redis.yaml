@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis-db
-  namespace: { { .Values.Namespace } }
+  namespace: {{ .Values.Namespace }}
 spec:
   replicas: 1
   selector:
@@ -38,11 +38,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-db-sv
-  namespace: { { .Values.Namespace } }
+  namespace: {{ .Values.Namespace }}
 spec:
-  nodeSelector:
-    "beta.kubernetes.io/os": linux
-    "type": user-node
   ports:
     - port: 6379
   selector:
