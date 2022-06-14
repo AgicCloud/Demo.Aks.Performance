@@ -17,7 +17,7 @@ spec:
       nodeSelector:
         "kubernetes.io/os": linux
         #Comment if trying locally
-        "type": user-node
+        #"type": user-node
       containers:
         - name: three-tier-app-front
           image: ghcr.io/macel94/aks-three-tier-app/frontend.server:master

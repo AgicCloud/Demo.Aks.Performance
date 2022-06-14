@@ -142,7 +142,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ALT/mainALT.bicep
+          template: ./Bicep/ALT/advanced-scenario/mainALT.bicep
           parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
           failOnStdErr: false
 

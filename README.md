@@ -314,7 +314,7 @@ After the editing, yo shoud re-run the pipeline.
 
 ## Azure Load Testing
 
-Before the first pipeline run, you can change the default load test file, that you can find in `Bicep\ALT\Test1.jmx`. This load test file can be edited with [Apache JMeter](https://jmeter.apache.org/). You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+Before the first pipeline run, you can change the default load test file, that you can find in `Bicep\ALT\base-scenario\Test1.jmx`. This load test file can be edited with [Apache JMeter](https://jmeter.apache.org/). You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 After the pipeline first launch, you can perform load testing using the Azure Load Testing resource created, you can find the documentation [at this link](https://docs.microsoft.com/en-us/azure/load-testing/)
 
