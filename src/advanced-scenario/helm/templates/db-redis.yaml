@@ -15,7 +15,8 @@ spec:
         app: redis-db
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": linux
+        "kubernetes.io/os": linux
+        #Comment if trying locally
         "type": user-node
       containers:
         - name: redis-db

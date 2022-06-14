@@ -107,7 +107,8 @@ spec:
         chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
     spec:
       nodeSelector:
-        "beta.kubernetes.io/os": linux
+        "kubernetes.io/os": linux
+        #Comment if trying locally
         "type": user-node
       containers:
       - name: user-app
