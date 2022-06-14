@@ -17,7 +17,7 @@ param agentCount int
 
 param agentVMSize string
 
-resource aks 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
+resource aks 'Microsoft.ContainerService/managedClusters@2022-04-01' = {
   name: name
   location: location
   properties: {
