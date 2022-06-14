@@ -235,7 +235,7 @@ jobs:
         with:
           resourceGroup: ${{ secrets.AZURE_RG }}
           loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
-          loadTestConfigFile: ./Bicep/ALT/config.yaml
+          loadTestConfigFile: ./Bicep/ALT/advanced-scenario/config.yaml
           env: |
             [
                 {
