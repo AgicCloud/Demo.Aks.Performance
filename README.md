@@ -163,7 +163,7 @@ Customize the resources names file `.github\workflows\base-scenario.yml`.
 
 In your GitHub repo, go to Code, then browse to `.github\workflows\base-scenario.yml`
 
-![image](https://user-images.githubusercontent.com/30232175/168174491-fd576870-cd5a-4790-8228-be66da3d6577.png)
+![runworkflow](https://user-images.githubusercontent.com/68650212/174095467-6e7e9ae9-66a4-4648-bc04-bdcd79f0e067.PNG)
 
 To edit the file, click the `Edit this file` icon.
 
@@ -213,13 +213,13 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 ![Actions](https://user-images.githubusercontent.com/60384226/166692831-25fe6373-d2c6-488d-b532-7f6dc964cef3.png)
 
-- Select Manual-Deploy section.
+- Select Base-Scenario-Manual-Deploy section.
 
-![pipeline](https://user-images.githubusercontent.com/33416347/168751095-60939047-9b87-414c-9fc9-0db261c5f79c.PNG)
+![workflow](https://user-images.githubusercontent.com/68650212/174095577-6a6067be-e220-4d15-9426-b463ccac1161.PNG)
 
 - Click on "Run Workflow".
 
-![Cattura](https://user-images.githubusercontent.com/33416347/167612354-072c4295-529d-4cfe-bf04-5bf6e2ef6ca6.PNG)
+![baserunworkflow](https://user-images.githubusercontent.com/68650212/174095535-327b6f51-a528-414b-af0e-dff146569af9.PNG)
 
 - Enter the required inputs:
   1. **Set the name of the Container Registry Resource Group** = Set the name of the resource group where the container registry is deployed
