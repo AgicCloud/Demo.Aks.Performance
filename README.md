@@ -154,7 +154,7 @@ Create the following GitHub secrets
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
->VERY IMPORTANT: If you want to test the advanced-scenario go here:
+>VERY IMPORTANT: If you want to test the advanced-scenario go here:[README-advancedScenario.md](README-advancedScenario.md)
 
 
 ## 5. Customize the base-scenario.yml file
@@ -226,15 +226,16 @@ If you have followed all the previous steps you can now start the pipeline, whic
   2. **Set Container Registry Name** = Name of container registry that contains the image of the web app to be tested. In the next paragraph it's explained how to get this value
   3. **Set Image Name** = Name of the image present in the container registry to be tested. In the next paragraph it's explained how to get this value
   4. **Set Image Tag** = The Tag of the image to be tested. In the next paragraph it's explained how to get this value
-  5. **Set App Replicas** = The desired number of instances of the web app
-  6. **Choose Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
+  5. **Set the number of app replicas** = The desired number of instances of the web app
+  6. **Set the number of nodes** = The desired number of nodes where the application will be deployed
+  7. **Choose the kubernetes node VM size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
 
 - The values **1**, **2** must match an existent Container Registry and should not be changed after the first pipeline run.
-- The value **6** cannot be changed after the first pipeline run.
+- The value **7** cannot be changed after the first pipeline run.
 - The values **3**, **4** can be changed to test different web apps present in the same Container Registry.
-- The value **5** can be changed to test different load.
+- The value **5**, **6** can be changed to test different load.
 
 ### **How to set correct values for Container Registry Name, Image Name and Image Tag**
 
