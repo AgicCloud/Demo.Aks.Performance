@@ -162,7 +162,7 @@ Customize the resources names file `.github\workflows\advanced-scenario.yml`.
 
 In your GitHub repo, go to Code, then browse to `.github\workflows\advanced-scenario.yml`
 
-![image](https://user-images.githubusercontent.com/30232175/168174491-fd576870-cd5a-4790-8228-be66da3d6577.png)
+![scenario-yml](https://user-images.githubusercontent.com/68650212/174091933-de581c35-f765-410c-b11d-746fd2508c34.PNG)
 
 To edit the file, click the `Edit this file` icon.
 
@@ -214,11 +214,11 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 - Select Advanced-Scenario-Manual-Deploy section.
 
-![pipeline](https://user-images.githubusercontent.com/33416347/168751095-60939047-9b87-414c-9fc9-0db261c5f79c.PNG)
+![workflow](https://user-images.githubusercontent.com/68650212/174091766-0dad557b-3ae9-41ed-9a9d-360cc714950b.PNG)
 
 - Click on "Run Workflow".
 
-![Cattura](https://user-images.githubusercontent.com/33416347/167612354-072c4295-529d-4cfe-bf04-5bf6e2ef6ca6.PNG)
+![runworkflow](https://user-images.githubusercontent.com/68650212/174092406-fca597e9-6bb6-40b2-827a-32f0923565cb.PNG)
 
 - Enter the required inputs:
   1. **Set App Replicas** = The desired number of instances of the web app
