@@ -221,7 +221,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
 ![runworkflow](https://user-images.githubusercontent.com/68650212/174092406-fca597e9-6bb6-40b2-827a-32f0923565cb.PNG)
 
 - Enter the required inputs:
-  1. **Set App Replicas** = The desired number of instances of the web app
+  1. **Set the number of nodes** = The desired number of nodes where the application will be deployed
   2. **Choose Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
