@@ -153,7 +153,7 @@ Create the following GitHub secrets
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
->VERY IMPORTANT: If you want to test the base-scenario go here:
+>VERY IMPORTANT: If you want to test the base-scenario go here: [README.md](README.md)
 
 
 ## 5. Customize the advanced-scenario.yml file
