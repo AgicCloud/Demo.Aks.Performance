@@ -222,7 +222,7 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 - Enter the required inputs:
   1. **Set the number of nodes** = The desired number of nodes where the application will be deployed
-  2. **Choose Agent Virtual Machine Size** = Size of the virtual machine that kubernetes will create
+  2. **Choose the kubernetes node VM size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
 
