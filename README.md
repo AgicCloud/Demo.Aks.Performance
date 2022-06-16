@@ -163,7 +163,7 @@ Customize the resources names file `.github\workflows\base-scenario.yml`.
 
 In your GitHub repo, go to Code, then browse to `.github\workflows\base-scenario.yml`
 
-![runworkflow](https://user-images.githubusercontent.com/68650212/174095467-6e7e9ae9-66a4-4648-bc04-bdcd79f0e067.PNG)
+![scenario-yml](https://user-images.githubusercontent.com/68650212/174095938-0ac1add3-6e01-4b2c-993b-e59f79a930aa.PNG)
 
 To edit the file, click the `Edit this file` icon.
 
