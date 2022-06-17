@@ -32,7 +32,6 @@ The first step you need to do before the environment setup is to fork your repos
 - To be able to follow this tutorial you must be a subscription owner.
   To check if your user is a subscription owner, open the Azure portal, then open the subscription, and check if your user is listed as Owner in the `Access Control (IAM)` blade, as you can see in the following image
   ![Immagine 2022-05-13 000205](https://user-images.githubusercontent.com/30232175/168175290-1d22e603-3e28-462f-aa05-d4a2d3d9b0a4.png)
-- A Container Registry with an image. If you don't have a container registry with an image check the file [README-createImageForTest.md](README-createImageForTest.md).
 - Docker Desktop installed https://www.docker.com/products/docker-desktop/
 - Azure CLI installed https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 
@@ -154,16 +153,16 @@ Create the following GitHub secrets
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
->VERY IMPORTANT: If you want to test the advanced-scenario go here:[README-advancedScenario.md](README-advancedScenario.md)
+>VERY IMPORTANT: If you want to test the base-scenario go here: [README.md](README.md)
 
 
-## 5. Customize the base-scenario.yml file
+## 5. Customize the advanced-scenario.yml file
 
-Customize the resources names file `.github\workflows\base-scenario.yml`.
+Customize the resources names file `.github\workflows\advanced-scenario.yml`.
 
-In your GitHub repo, go to Code, then browse to `.github\workflows\base-scenario.yml`
+In your GitHub repo, go to Code, then browse to `.github\workflows\advanced-scenario.yml`
 
-![scenario-yml](https://user-images.githubusercontent.com/68650212/174095938-0ac1add3-6e01-4b2c-993b-e59f79a930aa.PNG)
+![scenario-yml](https://user-images.githubusercontent.com/68650212/174091933-de581c35-f765-410c-b11d-746fd2508c34.PNG)
 
 To edit the file, click the `Edit this file` icon.
 
@@ -213,41 +212,22 @@ If you have followed all the previous steps you can now start the pipeline, whic
 
 ![Actions](https://user-images.githubusercontent.com/60384226/166692831-25fe6373-d2c6-488d-b532-7f6dc964cef3.png)
 
-- Select Base-Scenario-Manual-Deploy section.
+- Select Advanced-Scenario-Manual-Deploy section.
 
-![workflow](https://user-images.githubusercontent.com/68650212/174095577-6a6067be-e220-4d15-9426-b463ccac1161.PNG)
+![workflow](https://user-images.githubusercontent.com/68650212/174091766-0dad557b-3ae9-41ed-9a9d-360cc714950b.PNG)
 
 - Click on "Run Workflow".
 
-![baserunworkflow](https://user-images.githubusercontent.com/68650212/174095535-327b6f51-a528-414b-af0e-dff146569af9.PNG)
+![runworkflow](https://user-images.githubusercontent.com/68650212/174092406-fca597e9-6bb6-40b2-827a-32f0923565cb.PNG)
 
 - Enter the required inputs:
-  1. **Set the name of the Container Registry Resource Group** = Set the name of the resource group where the container registry is deployed
-  2. **Set Container Registry Name** = Name of container registry that contains the image of the web app to be tested. In the next paragraph it's explained how to get this value
-  3. **Set Image Name** = Name of the image present in the container registry to be tested. In the next paragraph it's explained how to get this value
-  4. **Set Image Tag** = The Tag of the image to be tested. In the next paragraph it's explained how to get this value
-  5. **Set the number of app replicas** = The desired number of instances of the web app
-  6. **Set the number of nodes** = The desired number of nodes where the application will be deployed
-  7. **Choose the kubernetes node VM size** = Size of the virtual machine that kubernetes will create
+  1. **Set the number of nodes** = The desired number of nodes where the application will be deployed
+  2. **Choose the kubernetes node VM size** = Size of the virtual machine that kubernetes will create
 
 **IMPORTANT**
 
-- The values **1**, **2** must match an existent Container Registry and should not be changed after the first pipeline run.
-- The value **7** cannot be changed after the first pipeline run.
-- The values **3**, **4** can be changed to test different web apps present in the same Container Registry.
-- The value **5**, **6** can be changed to test different load.
-
-### **How to set correct values for Container Registry Name, Image Name and Image Tag**
-
-You can find those values in the Container Registry --> Repositories page
-![info](https://user-images.githubusercontent.com/33416347/167634453-c8a5740d-a57b-4701-b5e6-0e240d56f44a.png)
-
-- The string labeled 1 is the Container Registry Name
-- The string labeled 2 is the Image name
-- The string labeled 3 Image tag
-
-- When you have entered all the inputs, click the green button "Run workflow"
-- The workflow creates the Azure resources, then deploys the apps in the AKS cluster.
+- The value **1** can be changed to test different load.
+- The value **2** cannot be changed after the first pipeline run.
 
 > **Important**: When you deploy an Azure Kubernetes Service cluster in Azure, a second resource group gets created for the worker nodes. By default, AKS will name the node resource group `MC_resourcegroupname_clustername_location`, as you can see [in the AKS documentation](https://docs.microsoft.com/en-us/azure/aks/cluster-configuration#custom-resource-group-name). This resource group is managed entirely by Kubernetes, and it will be deleted automatically on cluster deletion.
 
@@ -307,20 +287,25 @@ Here's how to do it
 
 2. Edit the github workflow
 
-   Modify the `.github/workflows/base-scenario.yml` file by adding the new vm in the AGENTVMSIZE input. Write the name in lower case.
+   Modify the `.github/workflows/advanced-scenario.yml` file by adding the new vm in the AGENTVMSIZE input. Write the name in lower case.
    You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 ## Configure your web app
 
-You can change yor web app configuration in the Helm Chart. You have to edit the `src\helloworld-service\user-service-chart\templates\infrastructure.yaml` file, starting from line 114, for example changing resources requests and limits, or adding environment variables to configure your app, or adding some persistent volume claim. You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+You can change yor web app configuration in the Helm Chart. You have to edit files in the path: `.src/advanced-scenario/helm`, or if you do not have a helm chart but one or more k8s files, insert them in the folder `.src/advanced-scenario/helm/templates`. You can modify or add the files directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 After the editing, yo shoud re-run the pipeline.
 
 ## Azure Load Testing
 
-Before the first pipeline run, you can change the default load test file, that you can find in `Bicep\ALT\base-scenario\Test1.jmx`. This load test file can be edited with [Apache JMeter](https://jmeter.apache.org/). You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+Before the first pipeline run, you can change the default load test file, that you can find in `Bicep\ALT\advanced-scenario\Test1.jmx`. This load test file can be edited with [Apache JMeter](https://jmeter.apache.org/). You can modify the file directly in the GitHub web page, or you can clone the repo locally, perform the editing, then push the modified files to the repo as [you can read here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
 After the pipeline first launch, you can perform load testing using the Azure Load Testing resource created, you can find the documentation [at this link](https://docs.microsoft.com/en-us/azure/load-testing/)
+
+| :warning: WARNING                                                                                            |
+| :----------------------------------------------------------------------------------------------------------- |
+|  Changing the namespace or not specifying the nodeselector relative to the type of node, you could end up deploying on the master node or you might not be able to connect the chaos experiment to your pods. https://docs.microsoft.com/en-us/azure/chaos-studio/chaos-studio-chaos-experiments                                  
+ |
 
 | :warning: WARNING                                                                                            |
 | :----------------------------------------------------------------------------------------------------------- |
@@ -399,6 +384,11 @@ To remove all the objects created, you must:
      ```console
      az ad sp delete -- id $ID
      ```
+| :warning: WARNING                                                                                            |
+| :----------------------------------------------------------------------------------------------------------- |
+| If you want to test the other scenario you must delete the resources. 
+|
+
      
      **Reference** https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-list <br/>
      **Reference** https://docs.microsoft.com/it-it/cli/azure/ad/sp?view=azure-cli-latest#az-ad-sp-delete
@@ -412,8 +402,6 @@ https://github.com/Azure/bicep/blob/main/docs/examples/101/aks/main.bicep
 
 https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters?tabs=bicep
 
-https://github.com/Azure/bicep/blob/main/docs/examples/101/container-registry/main.bicep
-
 https://docs.microsoft.com/en-us/azure/templates/microsoft.insights/2018-05-01-preview/components?tabs=bicep
 
 https://docs.microsoft.com/en-us/azure/developer/github/connect-from-azure?tabs=azure-cli%2Clinux
@@ -425,10 +413,6 @@ https://docs.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-githu
 https://docs.microsoft.com/en-us/azure/templates/microsoft.containerservice/2021-03-01/managedclusters?tabs=bicep#managedclusteridentity
 
 https://docs.microsoft.com/en-us/azure/templates/microsoft.loadtestservice/loadtests?tabs=bicep
-
-https://github.com/marketplace/actions/azure-container-registry-build
-
-https://docs.microsoft.com/en-us/azure/container-registry/container-registry-authentication?tabs=azure-cli#authentication-options
 
 https://docs.microsoft.com/en-us/azure/aks/concepts-clusters-workloads#deployments-and-yaml-manifests
 
