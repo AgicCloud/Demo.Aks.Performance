@@ -1,0 +1,49 @@
+#Redis as DB
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-db
+  namespace: {{ .Values.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-db
+  template:
+    metadata:
+      labels:
+        app: redis-db
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+        #Comment if trying locally
+        "type": user-node
+      containers:
+        - name: redis-db
+          image: redis:latest
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          ports:
+            - containerPort: 6379
+              name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-db-sv
+  namespace: {{ .Values.Namespace }}
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: redis-db
+---
+

@@ -1,10 +1,10 @@
-name: Manual-Deploy
+name: Base-Scenario-Manual-Deploy
 
 # This is a basic workflow to help you get started with Actions
 # Global Variables
 
 env:
-  APPNAME: "finaltestdemo"
+  APPNAME: "basetestapp"
   KUBERNETESSERVICENAME: "demo-performance-aks"
   AZURELOADTESTINGNAME: "demo-performance-alt"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshStressFaultsExperiment"
@@ -173,7 +173,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           resourceGroupName: ${{ secrets.AZURE_RG }}
-          template: ./Bicep/ALT/mainALT.bicep
+          template: ./Bicep/ALT/base-scenario/mainALT.bicep
           parameters: name="${{ env.AZURELOADTESTINGNAME }}" location="northeurope"
           failOnStdErr: false
 
@@ -272,7 +272,7 @@ jobs:
         with:
           resourceGroup: ${{ secrets.AZURE_RG }}
           loadTestResource: "${{ env.AZURELOADTESTINGNAME }}"
-          loadTestConfigFile: ./Bicep/ALT/config.yaml
+          loadTestConfigFile: ./Bicep/ALT/base-scenario/config.yaml
           env: |
             [
                 {

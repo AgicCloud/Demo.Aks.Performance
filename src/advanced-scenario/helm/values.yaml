@@ -1,0 +1,8 @@
+# Default values for K8s-Helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+Env: "Development"
+Namespace: "demo-performance"
+# App:
+#   # ImageName: "mcr.microsoft.com/dotnet/samples:aspnetapp"
+#   Replicas: 3
