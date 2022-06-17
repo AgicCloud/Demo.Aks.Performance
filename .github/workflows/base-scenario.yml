@@ -4,7 +4,7 @@ name: Base-Scenario-Manual-Deploy
 # Global Variables
 
 env:
-  APPNAME: "finaltestdemo"
+  APPNAME: "basetestapp"
   KUBERNETESSERVICENAME: "demo-performance-aks"
   AZURELOADTESTINGNAME: "demo-performance-alt"
   CHAOSMESHEXPERIMENTNAME: "ChaosMeshStressFaultsExperiment"
