@@ -154,6 +154,8 @@ Create the following GitHub secrets
 After that, you will have the following secrets
 ![image](https://user-images.githubusercontent.com/60384226/166691309-e492dd8c-8bb0-462b-a28d-44e9c5a0df4f.png)
 
+## 5. Start the desired scenario pipeline
+
 Then you need to choose: 
 1. If you want to try the base-scenario with a single stateless image contained in an Azure Container Registry go here:[README-baseScenario.md](README-baseScenario.md)
 2. If you want to try the advanced-scenario (where we used public images by default) go here:[README-advancedScenario.md](README-advancedScenario.md)
