@@ -20,7 +20,7 @@ spec:
         "type": user-node
       containers:
         - name: three-tier-app-front
-          image: ghcr.io/macel94/aks-three-tier-app/frontend.server:master
+          image: ghcr.io/agiccloud/aks-three-tier-app/frontend.server:master
           resources:
             requests:
               cpu: 100m
